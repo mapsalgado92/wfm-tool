@@ -67,6 +67,8 @@ export const EntriesConverter = () => {
 
         <CSVUploader loadedHandler={handleLoaded} removeHandler={handleRemove} header="Upload Raw Data" />
 
+        <h3>Converters</h3>
+
         <div className="row mb-4">
 
           <div className="col">

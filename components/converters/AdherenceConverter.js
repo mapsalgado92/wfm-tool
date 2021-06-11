@@ -86,7 +86,7 @@ const AdherenceConverter = ({ raw, exportConverted }) => {
   }
 
   return (
-    <button onClick={handleConversion} disabled={raw.length < 1} className="btn btn-outline-secondary m-2 text-nowrap">
+    <button onClick={handleConversion} disabled={raw.length < 1} className="btn btn-outline-warning m-2 text-nowrap">
       <span>Adherence</span>
     </button>
   )

@@ -38,14 +38,14 @@ const CSVUploader = ({ loadedHandler, removeHandler, header }) => {
             <button
               type='button'
               onClick={handleOpenDialog}
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
             >
               Browse
             </button>
-            <div className="border mx-1 d-flex align-items-center justify-content-center" style={{ width: "300px", overflow: "hidden" }}>
+            <div className="border mx-1 d-flex align-items-center justify-content-center" style={{ width: "180px", overflow: "hidden", fontSize: "0.75em" }}>
               {file && file.name}
             </div>
-            <button className="btn btn-danger" onClick={handleRemoveFile}>Remove</button>
+            <button className="btn btn-danger btn-sm" onClick={handleRemoveFile}>Remove</button>
           </aside>
         )}
       </CSVReader>
