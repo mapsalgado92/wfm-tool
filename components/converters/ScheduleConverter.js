@@ -47,7 +47,7 @@ const ScheduleConverter = ({ raw, exportConverted }) => {
         entries.push([current.agentId, current.agentName, current.date, data[i][_ACTIVITY], data[i][_ACT_START], data[i][_ACT_END] ? data[i][_ACT_END] : "-"])
       }
     }
-    console.log(entries)
+
     exportConverted({ header, entries })
   }
 
