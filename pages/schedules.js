@@ -238,13 +238,13 @@ const Schedules = () => {
   return (
     <Fragment>
       <Head>
-        <title>Schedules</title>
+        <title>WFM TOOL - Schedules & Kronos</title>
         <meta name="description" content="WFM Tool" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="mb-4 container">
-        <div className="container d-flex flex-column align-items-center text-center">
-          <h3>Uploads</h3>
+        <div className=" d-flex flex-column align-items-center text-center my-4">
+          <h3 className="title-text">UPLOADS</h3>
           <div className="d-flex row">
             <div className="col">
               <CSVUploader loadedHandler={handleUploadSchedules} removeHandler={() => setLoaded({ ...loaded, schedules: false })} header={"Shcedules CSV"} />
@@ -257,13 +257,15 @@ const Schedules = () => {
             </div>
           </div>
         </div>
-        <div className="text-center">
+        <div className="text-center my-4">
+          <h3>SCHEDULES</h3>
           <button className="btn btn-outline-dark btn-sm my-3" onClick={() => setGenerated({ ...generated, schedules: true })} disabled={!loaded.schedules}>Generate SCHEDULES</button>
           {(generated.schedules && loaded.schedules) && <SchedulesTable schedules={schedules} dates={datesList} iexIds={idList} activities={activityList} />}
         </div>
 
 
-        <div className="container d-flex flex-column align-items-center text-center">
+        <div className="container d-flex flex-column align-items-center text-center my-4">
+          <h3>KRONOS</h3>
           <button className="btn btn-outline-dark btn-sm my-3" onClick={handleGenerateKronos} disabled={!loaded.schedules}> Generate KRONOS</button>
           {generated.kronos && <div className="d-flex border p-2 m-2 shadow-sm">
             <input type="text" placeholder="Custom File Name" value={kronosCustomName} onChange={(e) => setKronosCustomName(e.target.value)}></input>

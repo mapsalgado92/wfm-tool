@@ -57,43 +57,48 @@ export const EntriesConverter = () => {
   return (
     <Fragment>
       <Head>
-        <title>Schedules</title>
-        <meta name="description" content="WFM Tool" />
+        <title>WFM TOOL - Entry Converters</title>
+        <meta name="description" content="WFM TOOL - Entry Converters" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="d-flex flex-column align-items-center mb-4 container" >
+      <main className="mb-4 container" >
+        <div className=" d-flex flex-column align-items-center text-center my-4">
+          <h3>UPLOADS</h3>
+          <CSVUploader loadedHandler={handleLoaded} removeHandler={handleRemove} header="Upload Raw Data" />
+        </div>
 
-        <h3>Uploads</h3>
 
-        <CSVUploader loadedHandler={handleLoaded} removeHandler={handleRemove} header="Upload Raw Data" />
 
-        <h3>Converters</h3>
-
-        <div className="row mb-4">
-
-          <div className="col">
-            <ScheduleConverter raw={raw} exportConverted={handleConvert} />
-          </div>
-          <div className="col">
-            <AuditTrailConverter raw={raw} exportConverted={handleConvert} />
-          </div>
-          <div className="col">
-            <AdherenceConverter raw={raw} exportConverted={handleConvert} />
+        <div className=" d-flex flex-column align-items-center text-center my-4">
+          <h3>CONVERTERS</h3>
+          <div className="row">
+            <div className="col">
+              <ScheduleConverter raw={raw} exportConverted={handleConvert} />
+            </div>
+            <div className="col">
+              <AuditTrailConverter raw={raw} exportConverted={handleConvert} />
+            </div>
+            <div className="col">
+              <AdherenceConverter raw={raw} exportConverted={handleConvert} />
+            </div>
           </div>
         </div>
 
-        {converted.isConverted && <div className="d-flex border p-2 m-2 shadow-sm">
-          <input type="text" placeholder="Custom Report Name" value={customName} onChange={handleChange}></input>
-          <CSVDownloader
-            data={[converted.data.header, ...converted.data.entries]}
-            filename={'CSV_' + customName}
-          >
-            <button className="btn btn-success mx-2">Download Converted CSV</button>
-          </CSVDownloader>
-
+        {converted.isConverted && <div className=" d-flex flex-column align-items-center text-center my-4">
+          <h3>DATA VIEWER</h3>
+          <div className="d-flex border p-2 m-2 shadow-sm">
+            <input type="text" placeholder="Custom Report Name" value={customName} onChange={handleChange}></input>
+            <CSVDownloader
+              data={[converted.data.header, ...converted.data.entries]}
+              filename={'CSV_' + customName}
+            >
+              <button className="btn btn-success mx-2">Download Converted CSV</button>
+            </CSVDownloader>
+          </div>
+          <SQLTable input={converted} title=" " />
         </div>
         }
-        <SQLTable input={converted} />
+
       </main >
     </Fragment>
   )

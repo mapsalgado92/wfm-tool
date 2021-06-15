@@ -2,7 +2,7 @@ const SQLTable = ({ input, title }) => {
 
   return (
     <div className="d-flex flex-column align-items-center text-center">
-      <span className="h3">{title ? title : "Data Viewer"}</span>
+      <span className="h3">{title ? title : "DATA VIEWER"}</span>
       {input.isConverted && (input.data.entries.length > 0) ?
         <table className="table">
           <thead>
