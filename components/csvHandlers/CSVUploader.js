@@ -1,7 +1,7 @@
 import { CSVReader } from 'react-papaparse'
 import { Fragment, useRef } from 'react'
 
-const CSVUploader = ({ loadedHandler, removeHandler, header }) => {
+const CSVUploader = ({ loadedHandler, removeHandler, header, label }) => {
 
   const buttonRef = useRef()
 
@@ -49,6 +49,7 @@ const CSVUploader = ({ loadedHandler, removeHandler, header }) => {
           </aside>
         )}
       </CSVReader>
+      {label && <label className="text-secondary mt-1" style={{ fontSize: "0.7em" }}>{label}</label>}
     </div >
   )
 }

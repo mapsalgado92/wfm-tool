@@ -64,10 +64,8 @@ export const EntriesConverter = () => {
       <main className="mb-4 container" >
         <div className=" d-flex flex-column align-items-center text-center my-4">
           <h3>UPLOADS</h3>
-          <CSVUploader loadedHandler={handleLoaded} removeHandler={handleRemove} header="Upload Raw Data" />
+          <CSVUploader loadedHandler={handleLoaded} removeHandler={handleRemove} header="Upload Raw Data" label="Insert IEX raw report" />
         </div>
-
-
 
         <div className=" d-flex flex-column align-items-center text-center my-4">
           <h3>CONVERTERS</h3>
