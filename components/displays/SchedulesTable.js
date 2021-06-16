@@ -1,8 +1,21 @@
+import { Fragment, useState } from "react"
+
 const SchedulesTable = ({ dates, iexIds, activities, schedules }) => {
 
+  const [detail, setDetail] = useState(null)
+
+  const handleSelectDetail = (breakdown, agent, date) => {
+
+    setDetail({
+      agent,
+      date,
+      breakdown
+    })
+
+  }
+
   return (
-    <div>
-      <h3 className="text-center">Schedules</h3>
+    <Fragment>
       <div className="d-flex justify-content-start text-center">
         <div className="d-flex fixed-section">
           <div className="d-flex flex-column column-schedules">
@@ -10,7 +23,7 @@ const SchedulesTable = ({ dates, iexIds, activities, schedules }) => {
               IEXID
             </div>
             {iexIds && iexIds.map((id) =>
-              <div key={"iexId-item" + id} className="schedule-item bg-light border border-white px-1">
+              <div key={"iexId-item" + id} className="schedule-item bg-light border border-white btn btn-light btn-sm p-0" >
                 {id}
               </div>
             )}
@@ -18,7 +31,7 @@ const SchedulesTable = ({ dates, iexIds, activities, schedules }) => {
               IEXID
               </div>
             {activities && activities.map(activity =>
-              <div key={"validator-empty-" + activity} className="schedule-item border border-white bg-white px-1"></div>
+              <div key={"validator-empty-" + activity} className="schedule-item border border-white bg-white btn btn-white btn-sm p-0"></div>
             )}
           </div>
           <div className="d-flex flex-column column-schedules">
@@ -26,7 +39,7 @@ const SchedulesTable = ({ dates, iexIds, activities, schedules }) => {
               AGENT
             </div>
             {iexIds && iexIds.map((id) =>
-              <div key={"agent-item-" + id} className="schedule-item border border-white bg-light px-1">
+              <div key={"agent-item-" + id} className="schedule-item border border-white btn btn-light btn-sm p-0">
                 {schedules[id].name}
               </div>
             )}
@@ -35,7 +48,7 @@ const SchedulesTable = ({ dates, iexIds, activities, schedules }) => {
             </div>
             {activities && activities.map(activity =>
               <div key={"validator-empty-" + activity}
-                className={activity === "OFF" ? "schedule-item border border-white bg-warning px-1" : /[0-9]+:[0-9]+/.test(activity) ? "schedule-item border border-white bg-light px-1" : "schedule-item border border-white text-light bg-danger px-1"}>
+                className={activity === "OFF" ? "schedule-item border border-white bg-warning btn btn-light btn-sm p-0" : /[0-9]+:[0-9]+/.test(activity) ? "schedule-item border border-white bg-light  btn btn-light btn-sm p-0" : "schedule-item border border-white text-light bg-danger  btn btn-light btn-sm p-0"}>
                 {activity}
               </div>
             )}
@@ -49,15 +62,14 @@ const SchedulesTable = ({ dates, iexIds, activities, schedules }) => {
               <div className="bg-dark text-light border border-white schedule-item px-1">{date}</div>
               {iexIds && iexIds.map((id) => {
                 let daily = schedules[id][date]
-
                 if (daily) {
                   if (daily.output) {
                     if (daily.output === 'OFF') {
-                      return <div key={"item-" + date + "-" + id} className="schedule-item border border-white bg-warning px-1">{daily.output}</div>
+                      return <button key={"item-" + date + "-" + id} className="schedule-item border border-white btn btn-warning btn-sm p-0" onClick={() => handleSelectDetail(daily.breakdown, schedules[id].name, date)}>{daily.output}</button>
                     } else if (daily.hasOpen) {
-                      return <div key={"item-" + date + "-" + id} className="schedule-item border border-white bg-light px-1">{daily.output}</div>
+                      return <button key={"item-" + date + "-" + id} className="schedule-item border border-white btn btn-light btn-sm p-0" onClick={() => handleSelectDetail(daily.breakdown, schedules[id].name, date)}>{daily.output}</button>
                     } else {
-                      return <div key={"item-" + date + "-" + id} className="schedule-item border border-white bg-danger text-light px-1">{daily.output}</div>
+                      return <button key={"item-" + date + "-" + id} className="schedule-item border border-white btn btn-danger btn-sm p-0" onClick={() => handleSelectDetail(daily.breakdown, schedules[id].name, date)}>{daily.output}</button>
                     }
                   }
                 } else {
@@ -86,7 +98,20 @@ const SchedulesTable = ({ dates, iexIds, activities, schedules }) => {
           )}
         </div>
       </div>
-    </div >
+      {detail && <div className="mt-3">
+        <h5>Detail</h5>
+        <h6> {detail.agent}</h6>
+        <h6> {detail.date}</h6>
+
+        {detail.breakdown ? detail.breakdown.map(detail =>
+          <div>
+            {`${detail.activity}: ${detail.start} to ${detail.end}`}
+          </div>) : <div>
+          No details
+          </div>
+        }
+      </div>}
+    </Fragment >
   )
 }
 

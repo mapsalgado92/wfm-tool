@@ -201,7 +201,7 @@ const Schedules = () => {
 
     idList.forEach(iexId => {
       datesList.forEach(date => {
-        if (schedules[iexId][date]) {
+        if (schedules[iexId][date] && schedules[iexId][date].output !== "OUT") {
           let daily = schedules[iexId][date]
           let newRow
           if (agentData[iexId]) {
@@ -221,7 +221,9 @@ const Schedules = () => {
           } else if (daily.output === "OFF") {
             newRow.push("", "", "", "OFF", "8")
           } else if (mappings[daily.output]) {
-            newRow.push("", "", "", mappings[daily.output], "8")
+            if (mappings[daily.output] !== "REMOVE") {
+              newRow.push("", "", "", mappings[daily.output], "8")
+            }
           } else {
             newRow.push("", "", "", "NF: " + daily.output, "8")
           }
@@ -278,7 +280,7 @@ const Schedules = () => {
 
           </div>
           }
-          {(kronos && generated.kronos) && <SQLTable title="Kronos Viewer" input={{ data: { header: kronos[0], entries: kronos.slice(1) }, isConverted: true }} />}
+          {(kronos && generated.kronos) && <SQLTable title="Kronos Viewer" input={{ data: { header: kronos[0], entries: kronos.slice(1) }, isConverted: true }} title=" " />}
         </div>
       </main>
     </Fragment>
