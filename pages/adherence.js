@@ -1,5 +1,6 @@
 import Head from "next/head"
 import { Fragment, useState } from "react"
+import { CSVDownloader } from "react-papaparse"
 import CSVUploader from "../components/csvHandlers/CSVUploader"
 import AdherenceDateTable from "../components/displays/AdherenceDateTable"
 import { dateToString, stringToDate, convertTime, incrementDate } from "../snippets/date-handling"
@@ -10,10 +11,15 @@ const Adherence = () => {
 
   const [adherence, setAdherence] = useState({})
   const [loaded, setLoaded] = useState({ adherence: false })
+  const [generated, setGenerated] = useState({ adherence: false })
+
+  const [exports, setExports] = useState({ adherence: null })
+  const [exportsCustomName, setExportsCustomName] = useState("")
 
   const handleUploadAdherence = (csv) => {
 
     setLoaded({ adherence: false })
+    setGenerated({ adherence: false })
 
     const data = csv
 
@@ -66,7 +72,19 @@ const Adherence = () => {
     newAdherence.iexIds = newIds
     newAdherence.activities = newActivities.sort()
 
+    let newExports = [["IEXID", "AGENT"].concat(newDates)].concat(newIds.map((id) =>
+      [id, newAdherence[id].name].concat(newDates.map((date) => {
+        if (newAdherence[id][date]) {
+          return newAdherence[id][date]["Total"]["ADH PERCENT"]
+        }
+        else {
+          return "N/A"
+        }
+      }
+      ))))
+
     setAdherence(newAdherence)
+    setExports(newExports)
     setLoaded({ adherence: true })
 
 
@@ -84,12 +102,24 @@ const Adherence = () => {
         <h2 className="text-center text-danger">ADHERENCE</h2>
         <div className=" d-flex flex-column align-items-center text-center my-4">
           <h3>UPLOADS</h3>
-          <CSVUploader loadedHandler={handleUploadAdherence} removeHandler={() => setLoaded({ ...loaded, schedules: false })} header="Adherence CSV" label="Insert Adherence CSV" />
+          <CSVUploader loadedHandler={handleUploadAdherence} removeHandler={() => setLoaded({ ...loaded, adherence: false })} header="Adherence CSV" label="Insert Adherence CSV" />
         </div>
-
-        <h3 className="text-center mb-0">ADHERENCE BY DAY</h3>
-        {loaded.adherence && <AdherenceDateTable adherence={adherence} />}
-
+        <div className="container d-flex flex-column align-items-center text-center my-2">
+          <h3>ADHERENCE BY DAY</h3>
+          <button className="btn btn-outline-dark btn-sm my-3" onClick={() => setGenerated({ ...generated, adherence: true })} disabled={!loaded.adherence}>Generate ADHERENCE</button>
+          {generated.adherence && <div className="d-flex justify-content-center border p-2 m-2 shadow-sm">
+            <input type="text" placeholder="Custom File Name" value={exportsCustomName} onChange={(e) => setExportsCustomName(e.target.value)}></input>
+            <CSVDownloader
+              data={exports}
+              filename={'ADH_' + exportsCustomName}
+            >
+              <button className="btn btn-success btn-sm mx-2">Download Exports CSV</button>
+            </CSVDownloader>
+          </div>}
+        </div>
+        <div>
+          {generated.adherence && <AdherenceDateTable adherence={adherence} />}
+        </div>
       </main>
 
     </Fragment>

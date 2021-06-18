@@ -91,7 +91,7 @@ export const EntriesConverter = () => {
               data={[converted.data.header, ...converted.data.entries]}
               filename={'CSV_' + customName}
             >
-              <button className="btn btn-success mx-2">Download Converted CSV</button>
+              <button className="btn btn-success mx-2 btn-sm">Download Converted CSV</button>
             </CSVDownloader>
           </div>
           <SQLTable input={converted} title=" " />

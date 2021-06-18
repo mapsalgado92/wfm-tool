@@ -275,23 +275,23 @@ const Schedules = () => {
             </div>
           </div>
         </div>
-        <div className="container d-flex flex-column align-items-center text-center my-4">
+        <div className="container d-flex flex-column align-items-center text-center my-3">
           <h3>SCHEDULES</h3>
           <button className="btn btn-outline-dark btn-sm my-3" onClick={() => setGenerated({ ...generated, schedules: true })} disabled={!loaded.schedules}>Generate SCHEDULES</button>
-          {generated.schedules && <div className="d-flex justify-content-center border p-2 m-2 shadow-sm">
+          {generated.schedules && <div className="d-flex justify-content-center border p-2 shadow-sm">
             <input type="text" placeholder="Custom File Name" value={exportsCustomName} onChange={(e) => setExportsCustomName(e.target.value)}></input>
             <CSVDownloader
               data={exports}
               filename={'SCH_' + exportsCustomName}
             >
-              <button className="btn btn-success mx-2">Download Exports CSV</button>
+              <button className="btn btn-success btn-sm mx-2">Download Exports CSV</button>
             </CSVDownloader>
 
           </div>
           }
         </div>
 
-        <div className="text-center my-4">
+        <div className="text-center my-2">
 
           {generated.schedules && <SchedulesTable schedules={schedules} dates={datesList} iexIds={idList} activities={activityList} />}
         </div>
