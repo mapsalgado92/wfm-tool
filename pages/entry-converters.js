@@ -62,6 +62,7 @@ export const EntriesConverter = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="mb-4 container" >
+        <h2 className="text-center text-danger">ENTRY CONVERTERS</h2>
         <div className=" d-flex flex-column align-items-center text-center my-4">
           <h3>UPLOADS</h3>
           <CSVUploader loadedHandler={handleLoaded} removeHandler={handleRemove} header="Upload Raw Data" label="Insert IEX raw report" />

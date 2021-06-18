@@ -48,12 +48,11 @@ const SchedulesTable = ({ dates, iexIds, activities, schedules }) => {
             </div>
             {activities && activities.map(activity =>
               <div key={"validator-empty-" + activity}
-                className={activity === "OFF" ? "schedule-item border border-white bg-warning btn btn-light btn-sm p-0" : /[0-9]+:[0-9]+/.test(activity) ? "schedule-item border border-white bg-light  btn btn-light btn-sm p-0" : "schedule-item border border-white text-light bg-danger  btn btn-light btn-sm p-0"}>
+                className={activity === "OFF" ? "schedule-item border border-white bg-warning" : /[0-9]+:[0-9]+/.test(activity) ? "schedule-item border border-white bg-light" : "schedule-item border border-white text-light bg-danger"}>
                 {activity}
               </div>
             )}
           </div>
-
         </div>
 
         <div className="d-flex overflow-auto mostly-customized-scrollbar">
@@ -98,7 +97,7 @@ const SchedulesTable = ({ dates, iexIds, activities, schedules }) => {
           )}
         </div>
       </div>
-      {detail && <div className="mt-3">
+      {detail && <div className="mt-3 text-center">
         <h5>Detail</h5>
         <h6> {detail.agent}</h6>
         <h6> {detail.date}</h6>

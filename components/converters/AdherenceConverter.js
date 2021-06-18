@@ -50,16 +50,19 @@ const AdherenceConverter = ({ raw, exportConverted }) => {
         current.agentName = split.join(" ")
       }
 
+      if (/MU:/.test(data[i][_MU]) || /MU Set:/.test(data[i][_MU])) {
+        current.agentName = data[i][_MU]
+        current.agentId = "MU Total"
+
+
+      }
+
       if (/Date:/.test(data[i][_DATE])) {
         current.date = data[i][_DATE].split(":")[1]
       }
 
       if (/Total for/.test(data[i][_TOTALS])) {
         current.date = "Period Total"
-      }
-
-      if (/MU:/.test(data[i][_MU]) || /MU Set:/.test(data[i][_MU])) {
-        current.agent = data[i][_MU]
       }
 
       if (/[0-9]+:[0-9]+/.test(data[i][_SCH_TIME]) && data[i][_ACTIVITY]) {

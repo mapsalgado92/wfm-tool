@@ -8,15 +8,15 @@ const SQLTable = ({ input, title }) => {
           <thead>
             <tr>
               {input.data.header.map((item) =>
-                <th scope="col">{item}</th>
+                <th scope="col" key={"header-" + item}>{item}</th>
               )}
             </tr>
           </thead>
           <tbody>
-            {input.data.entries.map((entry) => {
-              return <tr>
-                {entry.map((field) =>
-                  <td>{field}</td>
+            {input.data.entries.map((entry, index1) => {
+              return <tr key={"entry-" + index1}>
+                {entry.map((field, index2) =>
+                  <td key={"field-" + field + index1 + index2}>{field}</td>
                 )}
               </tr>
             }

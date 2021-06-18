@@ -51,3 +51,9 @@ a {
   background: rgb(61, 52, 52);
   border-radius: 6px
 }
+
+.btn:focus,
+.btn:active{
+    box-shadow:none !important;
+    outline:0px !important;
+}

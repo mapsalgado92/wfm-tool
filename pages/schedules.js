@@ -2,14 +2,16 @@ import { useState, Fragment } from "react"
 import Head from 'next/head'
 import SchedulesTable from "../components/displays/SchedulesTable"
 import CSVUploader from "../components/csvHandlers/CSVUploader"
-
 import SQLTable from "../components/displays/SQLTable"
 import { CSVDownloader } from "react-papaparse"
+import { dateToString, stringToDate, convertTime, incrementDate } from "../snippets/date-handling"
 
 const Schedules = () => {
 
   const [schedules, setSchedules] = useState({})
   const [kronos, setKronos] = useState({})
+
+  const [exports, setExports] = useState([])
 
   const [idList, setIdList] = useState([])
   const [datesList, setDatesList] = useState([])
@@ -31,6 +33,7 @@ const Schedules = () => {
   })
 
   const [kronosCustomName, setKronosCustomName] = useState("")
+  const [exportsCustomName, setExportsCustomName] = useState("")
 
   const handleUploadSchedules = (csv) => {
 
@@ -148,9 +151,21 @@ const Schedules = () => {
 
     newActivityList = [...shiftList, ...auxList]
 
+    let newExports = [["IEXID", "AGENT"].concat(newDatesList)].concat(newIdList.map((id) =>
+      [id, agents[id].name].concat(newDatesList.map((date) =>
+        agents[id][date].output
+      ))))
+
+    console.log(newExports)
+
+
     setSchedules(agents)
     setIdList(newIdList)
+
     setDatesList(newDatesList.sort())
+
+    setExports(newExports)
+
     setActivityList(newActivityList)
     setLoaded({ ...loaded, schedules: true })
   }
@@ -245,6 +260,7 @@ const Schedules = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="mb-4 container">
+        <h2 className="text-center text-danger">SCHEDULES & KRONOS</h2>
         <div className=" d-flex flex-column align-items-center text-center my-4">
           <h3 className="title-text">UPLOADS</h3>
           <div className="d-flex row">
@@ -259,10 +275,25 @@ const Schedules = () => {
             </div>
           </div>
         </div>
-        <div className="text-center my-4">
+        <div className="container d-flex flex-column align-items-center text-center my-4">
           <h3>SCHEDULES</h3>
           <button className="btn btn-outline-dark btn-sm my-3" onClick={() => setGenerated({ ...generated, schedules: true })} disabled={!loaded.schedules}>Generate SCHEDULES</button>
-          {(generated.schedules && loaded.schedules) && <SchedulesTable schedules={schedules} dates={datesList} iexIds={idList} activities={activityList} />}
+          {generated.schedules && <div className="d-flex justify-content-center border p-2 m-2 shadow-sm">
+            <input type="text" placeholder="Custom File Name" value={exportsCustomName} onChange={(e) => setExportsCustomName(e.target.value)}></input>
+            <CSVDownloader
+              data={exports}
+              filename={'SCH_' + exportsCustomName}
+            >
+              <button className="btn btn-success mx-2">Download Exports CSV</button>
+            </CSVDownloader>
+
+          </div>
+          }
+        </div>
+
+        <div className="text-center my-4">
+
+          {generated.schedules && <SchedulesTable schedules={schedules} dates={datesList} iexIds={idList} activities={activityList} />}
         </div>
 
 
@@ -289,38 +320,3 @@ const Schedules = () => {
 
 export default Schedules
 
-//AUX FUNCTIONS
-
-const stringToDate = (dateStr) => {
-  let out = new Date(dateStr.split("/").join("-"))
-  return out
-}
-
-const dateToString = (dateObj) => {
-  let out = [[dateObj.getMonth() + 1], [dateObj.getDate()], [dateObj.getFullYear()]]
-  if (out[0] < 10) {
-    out[0] = ["0" + out[0]]
-  }
-  if (out[1] < 10) {
-    out[1] = ["0" + out[1]]
-  }
-  return out.join("/")
-}
-
-const incrementDate = (date) => {
-  let newDate = stringToDate(date)
-  newDate.setDate(newDate.getDate() + 1)
-  return dateToString(newDate)
-}
-
-const convertTime = (time) => {
-  let timeAux = time.split(" ")
-  timeAux[0] = timeAux[0].split(":").map(val => parseInt(val))
-  let out = 0
-  timeAux[1] === "AM" ? out = timeAux[0][0] * 100 + timeAux[0][1] : out = timeAux[0][0] * 100 + timeAux[0][1] + 1200
-  out = String(out)
-  if (out.length === 2) {
-    out = "0" + out
-  }
-  return out
-}
