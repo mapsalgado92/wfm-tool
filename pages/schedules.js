@@ -1,12 +1,14 @@
-import { useState, Fragment } from "react"
+import { useState, useContext, Fragment } from "react"
 import Head from 'next/head'
 import SchedulesTable from "../components/displays/SchedulesTable"
 import CSVUploader from "../components/csvHandlers/CSVUploader"
 import SQLTable from "../components/displays/SQLTable"
 import { CSVDownloader } from "react-papaparse"
 import { dateToString, stringToDate, convertTime, incrementDate } from "../snippets/date-handling"
+import { DataContext } from '../contexts/DataContextProvider';
 
 const Schedules = () => {
+  const { entries, setEntries } = useContext(DataContext)
 
   const [schedules, setSchedules] = useState({})
   const [kronos, setKronos] = useState({})
@@ -38,12 +40,19 @@ const Schedules = () => {
   const handleUploadSchedules = (csv) => {
 
     setLoaded({ ...loaded, schedules: false })
+    setEntries({ data: csv, type: "schedules" })
+    setLoaded({ ...loaded, schedules: true })
+
+  }
+
+  const handleGenerateSchedules = () => {
+
     setGenerated({ ...generated, schedules: false })
     setSchedules({})
     setIdList([])
     setDatesList([])
 
-    let data = csv
+    let data = entries.data
 
     const _IEXID = 0
     const _AGENT = 1
@@ -162,12 +171,14 @@ const Schedules = () => {
     setSchedules(agents)
     setIdList(newIdList)
 
+    setGenerated({ ...generated, schedules: true })
+
     setDatesList(newDatesList.sort())
 
     setExports(newExports)
 
     setActivityList(newActivityList)
-    setLoaded({ ...loaded, schedules: true })
+
   }
 
   const handleUploadAgentData = (csv) => {
@@ -261,6 +272,7 @@ const Schedules = () => {
       </Head>
       <main className="mb-4 container">
         <h2 className="text-center text-danger">SCHEDULES & KRONOS</h2>
+        <h1></h1>
         <div className=" d-flex flex-column align-items-center text-center my-4">
           <h3 className="title-text">UPLOADS</h3>
           <div className="d-flex row">
@@ -277,7 +289,7 @@ const Schedules = () => {
         </div>
         <div className="container d-flex flex-column align-items-center text-center my-3">
           <h3>SCHEDULES</h3>
-          <button className="btn btn-outline-dark btn-sm my-3" onClick={() => setGenerated({ ...generated, schedules: true })} disabled={!loaded.schedules}>Generate SCHEDULES</button>
+          <button className="btn btn-outline-dark btn-sm my-3" onClick={handleGenerateSchedules} disabled={entries.type !== "schedules"}>Generate SCHEDULES</button>
           {generated.schedules && <div className="d-flex justify-content-center border p-2 shadow-sm">
             <input type="text" placeholder="Custom File Name" value={exportsCustomName} onChange={(e) => setExportsCustomName(e.target.value)}></input>
             <CSVDownloader
@@ -299,7 +311,7 @@ const Schedules = () => {
 
         <div className="container d-flex flex-column align-items-center text-center my-4">
           <h3>KRONOS</h3>
-          <button className="btn btn-outline-dark btn-sm my-3" onClick={handleGenerateKronos} disabled={!loaded.schedules}> Generate KRONOS</button>
+          <button className="btn btn-outline-dark btn-sm my-3" onClick={handleGenerateKronos} disabled={!generated.schedules}>Generate KRONOS</button>
           {generated.kronos && <div className="d-flex border p-2 m-2 shadow-sm">
             <input type="text" placeholder="Custom File Name" value={kronosCustomName} onChange={(e) => setKronosCustomName(e.target.value)}></input>
             <CSVDownloader

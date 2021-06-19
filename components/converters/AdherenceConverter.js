@@ -1,12 +1,10 @@
-//AuditTrailConverter receives a JSON array of raw IEX Agent Schedules report by MU or MU Set (raw).
-//ScheduleConverter receives a function that expects a JSON OBJECT to export (exportConverted).
-//Output an object { header, entries } 
-//// header: array with the fields IEXID, AGENT, DATE, USER, MODIFIED, PROCESS, START, STOP.
-//// entries: 2D matrix with the entries matching the header fields.
-
+import { useContext } from 'react'
+import { DataContext } from '../../contexts/DataContextProvider';
 
 
 const AdherenceConverter = ({ raw, exportConverted }) => {
+
+  const { setEntries } = useContext(DataContext)
 
   const handleConversion = () => {
 
@@ -84,8 +82,8 @@ const AdherenceConverter = ({ raw, exportConverted }) => {
       }
     }
 
-    console.log(entries)
     exportConverted({ header, entries })
+    setEntries({ data: [header, ...entries], type: "adherence" })
   }
 
   return (

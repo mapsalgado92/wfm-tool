@@ -1,13 +1,11 @@
 import Head from 'next/head'
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useContext } from 'react'
 import { CSVReader, CSVDownloader } from 'react-papaparse'
 import AdherenceConverter from '../components/converters/AdherenceConverter'
 import AuditTrailConverter from '../components/converters/AuditTrailConverter'
 import ScheduleConverter from '../components/converters/ScheduleConverter'
 import CSVUploader from '../components/csvHandlers/CSVUploader'
-
 import SQLTable from '../components/displays/SQLTable'
-
 
 export const EntriesConverter = () => {
 
@@ -17,7 +15,6 @@ export const EntriesConverter = () => {
     data: {
       header: [],
       entries: []
-
     }
   })
 
@@ -45,14 +42,13 @@ export const EntriesConverter = () => {
         isConverted: true,
         data: newData
       })
+
     }
   }
 
   const handleChange = (e) => {
     setCustomName(e.target.value)
   }
-
-
 
   return (
     <Fragment>

@@ -3,10 +3,12 @@
 //Output an object { header, entries } 
 //// header: array with the fields IEX ID | AGENT | DATE | ACTIVITY | START | END.
 //// entries: 2D matrix with the entries matching the header fields.
-
-
+import { useContext } from 'react'
+import { DataContext } from '../../contexts/DataContextProvider';
 
 const ScheduleConverter = ({ raw, exportConverted }) => {
+
+  const { setEntries } = useContext(DataContext)
 
   const handleConversion = () => {
 
@@ -49,6 +51,7 @@ const ScheduleConverter = ({ raw, exportConverted }) => {
     }
 
     exportConverted({ header, entries })
+    setEntries({ data: [header, ...entries], type: "schedules" })
   }
 
   return (

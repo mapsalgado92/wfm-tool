@@ -1,13 +1,16 @@
 import Head from "next/head"
-import { Fragment, useState } from "react"
+import { Fragment, useState, useContext } from "react"
 import { CSVDownloader } from "react-papaparse"
 import CSVUploader from "../components/csvHandlers/CSVUploader"
 import AdherenceDateTable from "../components/displays/AdherenceDateTable"
 import { dateToString, stringToDate, convertTime, incrementDate } from "../snippets/date-handling"
 
+import { DataContext } from '../contexts/DataContextProvider';
 
 
 const Adherence = () => {
+
+  const { entries, setEntries } = useContext(DataContext)
 
   const [adherence, setAdherence] = useState({})
   const [loaded, setLoaded] = useState({ adherence: false })
@@ -18,10 +21,17 @@ const Adherence = () => {
 
   const handleUploadAdherence = (csv) => {
 
-    setLoaded({ adherence: false })
+    setLoaded({ ...loaded, adherence: false })
+    setEntries({ data: csv, type: "adherence" })
+    setLoaded({ ...loaded, adherence: true })
+
+  }
+
+  const handleGenerateAdherence = () => {
+
     setGenerated({ adherence: false })
 
-    const data = csv
+    const data = entries.data
 
     const [_IEXID, _AGENT, _DATE, _ACTIVITY, _SCH_TIME, _ACT_TIME, _MIN_IN_ADH, _MIN_OUT_ADH, _ADH_PERCENT, _CONF_MIN_DIF, _CONF_PERCENT] =
       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -85,9 +95,7 @@ const Adherence = () => {
 
     setAdherence(newAdherence)
     setExports(newExports)
-    setLoaded({ adherence: true })
-
-
+    setGenerated({ adherence: true })
 
   }
 
@@ -106,7 +114,7 @@ const Adherence = () => {
         </div>
         <div className="container d-flex flex-column align-items-center text-center my-2">
           <h3>ADHERENCE BY DAY</h3>
-          <button className="btn btn-outline-dark btn-sm my-3" onClick={() => setGenerated({ ...generated, adherence: true })} disabled={!loaded.adherence}>Generate ADHERENCE</button>
+          <button className="btn btn-outline-dark btn-sm my-3" onClick={handleGenerateAdherence} disabled={!entries.type === "adherence"}>Generate ADHERENCE</button>
           {generated.adherence && <div className="d-flex justify-content-center border p-2 m-2 shadow-sm">
             <input type="text" placeholder="Custom File Name" value={exportsCustomName} onChange={(e) => setExportsCustomName(e.target.value)}></input>
             <CSVDownloader
