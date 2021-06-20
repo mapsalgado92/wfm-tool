@@ -75,7 +75,7 @@ const AdherenceDateTable = ({ adherence }) => {
                   let opacity = parseFloat(daily[selectedActivity][selectedField]) / 100
                   return <button key={"item-" + date + "-" + id} className="schedule-item border border-white btn btn-light btn-sm p-0" style={{ backgroundColor: `rgba(0,250,0,${Math.pow(opacity, 3)})` }} onClick={() => handleSelectDetail(id, date)}>{daily[selectedActivity][selectedField]}</button>
                 } else {
-                  return <div key={"item-" + date + "-" + id} className="schedule-item border border-white bg-secondary text-light px-1">N/A</div>
+                  return <div key={"item-" + date + "-" + id} className="schedule-item border border-white bg-light text-secondary px-1">no data</div>
                 }
               })}
               <div className="bg-secondary text-light border border-white schedule-item px-1">{date}</div>
