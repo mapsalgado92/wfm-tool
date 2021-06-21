@@ -268,7 +268,7 @@ const Schedules = () => {
       <Head>
         <title>WFM TOOL - Schedules & Kronos</title>
         <meta name="description" content="WFM Tool" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"></link>
       </Head>
       <main className="mb-4 container">
         <h2 className="text-center text-danger">SCHEDULES & KRONOS</h2>

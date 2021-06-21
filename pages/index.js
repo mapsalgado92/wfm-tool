@@ -8,7 +8,7 @@ export default function Home() {
       <Head>
         <title>WFM TOOL</title>
         <meta name="description" content="WFM Tool" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"></link>
       </Head>
       <main className="d-flex flex-column justify-content-center  align-items-center">
 
