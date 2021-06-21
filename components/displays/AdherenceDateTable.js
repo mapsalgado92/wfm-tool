@@ -66,9 +66,10 @@ const AdherenceDateTable = ({ adherence }) => {
         </div>
 
         <div className="d-flex overflow-auto mostly-customized-scrollbar">
-          {adherence && adherence.dates.map((date) =>
-            <div key={"column-" + date} className="d-flex flex-column column-schedules">
-              <div className="bg-dark text-light border border-white schedule-item px-1">{date}</div>
+          {adherence && adherence.dates.map((date) => {
+            let splitDate = date.split("/")
+            return <div key={"column-" + date} className="d-flex flex-column column-schedules">
+              <div className="bg-dark text-light border border-white schedule-item px-1">{splitDate[1] + "/" + splitDate[0] + "/" + splitDate[2]}</div>
               {adherence && adherence.iexIds.map((id) => {
                 let daily = adherence[id][date]
                 if (daily && daily[selectedActivity]) {
@@ -81,6 +82,7 @@ const AdherenceDateTable = ({ adherence }) => {
               <div className="bg-secondary text-light border border-white schedule-item px-1">{date}</div>
 
             </div>
+          }
           )}
         </div>
 
