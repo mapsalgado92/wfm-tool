@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { Fragment, useState, useContext } from 'react'
-import { CSVReader, CSVDownloader } from 'react-papaparse'
+import { CSVDownloader } from 'react-papaparse'
 import AdherenceConverter from '../components/converters/AdherenceConverter'
 import AuditTrailConverter from '../components/converters/AuditTrailConverter'
 import ScheduleConverter from '../components/converters/ScheduleConverter'
@@ -55,7 +55,7 @@ export const EntriesConverter = () => {
       <Head>
         <title>WFM TOOL - Entry Converters</title>
         <meta name="description" content="WFM TOOL - Entry Converters" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"></link>
       </Head>
       <main className="mb-4 container" >
         <h2 className="text-center text-danger">ENTRY CONVERTERS</h2>
