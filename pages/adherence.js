@@ -120,6 +120,9 @@ const Adherence = () => {
             <CSVDownloader
               data={exports}
               filename={'ADH_' + exportsCustomName}
+              config={
+                { encoding: "ISO-8859-1" }
+              }
             >
               <button className="btn btn-success btn-sm mx-2">Download Exports CSV</button>
             </CSVDownloader>

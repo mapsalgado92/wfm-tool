@@ -86,6 +86,9 @@ export const EntriesConverter = () => {
             <CSVDownloader
               data={[converted.data.header, ...converted.data.entries]}
               filename={'CSV_' + customName}
+              config={
+                { encoding: "ISO-8859-1" }
+              }
             >
               <button className="btn btn-success mx-2 btn-sm">Download Converted CSV</button>
             </CSVDownloader>

@@ -295,6 +295,9 @@ const Schedules = () => {
             <CSVDownloader
               data={exports}
               filename={'SCH_' + exportsCustomName}
+              config={
+                { encoding: "ISO-8859-1" }
+              }
             >
               <button className="btn btn-success btn-sm mx-2">Download Exports CSV</button>
             </CSVDownloader>
@@ -317,6 +320,9 @@ const Schedules = () => {
             <CSVDownloader
               data={kronos}
               filename={'Kronos_' + kronosCustomName}
+              config={
+                { encoding: "ISO-8859-1" }
+              }
             >
               <button className="btn btn-success mx-2">Download Kronos CSV</button>
             </CSVDownloader>
