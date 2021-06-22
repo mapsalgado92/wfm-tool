@@ -26,6 +26,9 @@ export const convertTime = (time) => {
   let timeAux = time.split(" ")
   timeAux[0] = timeAux[0].split(":").map(val => parseInt(val))
   let out = 0
+  if (timeAux[0][0] === 12) {
+    timeAux[1] === "AM" ? out = "00" + timeAux[0][1] : out = "12" + timeAux[0][1]
+  }
   timeAux[1] === "AM" ? out = timeAux[0][0] * 100 + timeAux[0][1] : out = timeAux[0][0] * 100 + timeAux[0][1] + 1200
   out = String(out)
   if (out.length === 2) {
