@@ -299,9 +299,9 @@ const Schedules = () => {
                 { encoding: "ISO-8859-1" }
               }
             >
-              <button className="btn btn-success btn-sm mx-2">Download Exports CSV</button>
+              <button className="btn btn-success btn-sm ml-2">Download Exports CSV</button>
             </CSVDownloader>
-            <button className="btn btn-primary btn-sm mx-2" onClick={() => { navigator.clipboard.writeText(`'${exports.map(row => row.join("\t")).join("\n")}'`) }}>Copy to Clipboard</button>
+            <button className="btn btn-primary btn-sm ml-2" onClick={() => { navigator.clipboard.writeText(`'${exports.map(row => row.join("\t")).join("\n")}'`) }}>Copy to Clipboard</button>
 
 
           </div>
