@@ -3,7 +3,7 @@ import Head from 'next/head'
 import SchedulesTable from "../components/displays/SchedulesTable"
 import CSVUploader from "../components/csvHandlers/CSVUploader"
 import SQLTable from "../components/displays/SQLTable"
-import { CSVDownloader } from "react-papaparse"
+import { CSVDownloader, LINK_TYPE } from "react-papaparse"
 import { dateToString, stringToDate, convertTime, incrementDate } from "../snippets/date-handling"
 import { DataContext } from '../contexts/DataContextProvider';
 
@@ -301,6 +301,8 @@ const Schedules = () => {
             >
               <button className="btn btn-success btn-sm mx-2">Download Exports CSV</button>
             </CSVDownloader>
+            <button className="btn btn-primary btn-sm mx-2" onClick={() => { navigator.clipboard.writeText(`'${exports.map(row => row.join("\t")).join("\n")}'`) }}>Copy to Clipboard</button>
+
 
           </div>
           }
