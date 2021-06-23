@@ -3,7 +3,7 @@ import Head from 'next/head'
 import SchedulesTable from "../components/displays/SchedulesTable"
 import CSVUploader from "../components/csvHandlers/CSVUploader"
 import SQLTable from "../components/displays/SQLTable"
-import { CSVDownloader, LINK_TYPE } from "react-papaparse"
+import { CSVDownloader } from "react-papaparse"
 import { dateToString, stringToDate, convertTime, incrementDate } from "../snippets/date-handling"
 import { DataContext } from '../contexts/DataContextProvider';
 
@@ -186,8 +186,8 @@ const Schedules = () => {
     setGenerated({ ...generated, kronos: false })
     setLoaded({ ...loaded, agentData: false })
 
-    const _IEXID = 0
-    const _BOOSTID = 1
+    const _IEXID = 3
+    const _BOOSTID = 4
 
     let newAgentData = {}
 
@@ -251,7 +251,7 @@ const Schedules = () => {
           } else if (mappings[daily.output]) {
             if (mappings[daily.output] !== "REMOVE") {
               newRow.push("", "", "", mappings[daily.output], "8")
-              console.log("REMOVED", daily.output, mappings[daily.output])
+              console.log("FOUND", daily.output, mappings[daily.output])
             }
           } else {
             newRow.push("", "", "", "NF: " + daily.output, "8")
@@ -284,7 +284,7 @@ const Schedules = () => {
               <CSVUploader loadedHandler={handleUploadSchedules} removeHandler={() => setLoaded({ ...loaded, schedules: false })} header={"Shcedules CSV"} label="Insert Schedules CSV: IEXID-DATE-ACTIVITY-START-END" />
             </div>
             <div className="col">
-              <CSVUploader loadedHandler={handleUploadAgentData} removeHandler={() => setLoaded({ ...loaded, kronos: false })} header={"Agent Data CSV"} label="Insert Agent Data CSV: IEXID-BOOSTID" />
+              <CSVUploader loadedHandler={handleUploadAgentData} removeHandler={() => setLoaded({ ...loaded, kronos: false })} header={"Agent Data CSV"} label="Insert Agent Data CSV: PROJECT-NAME-IEXID-BOOSTID" />
             </div>
             <div className="col">
               <CSVUploader loadedHandler={handleUploadMappings} removeHandler={() => setLoaded({ ...loaded, kronos: false })} header={"Mappings CSV"} label="Insert Mappings CSV: ACTIVITY-MAPPING" />
