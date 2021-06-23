@@ -194,6 +194,8 @@ const Schedules = () => {
     csv.slice(1).forEach((entry) => {
 
       newAgentData[entry[_IEXID]] = entry[_BOOSTID]
+
+      console.log(entry)
     })
 
 
