@@ -186,16 +186,17 @@ const Schedules = () => {
     setGenerated({ ...generated, kronos: false })
     setLoaded({ ...loaded, agentData: false })
 
-    const _IEXID = 3
-    const _BOOSTID = 4
+    const _IEXID = 2
+    const _BOOSTID = 3
 
     let newAgentData = {}
+
+    console.log(csv[1], csv[1][_IEXID], csv[1][_BOOSTID])
 
     csv.slice(1).forEach((entry) => {
 
       newAgentData[entry[_IEXID]] = entry[_BOOSTID]
 
-      console.log(entry)
     })
 
 
