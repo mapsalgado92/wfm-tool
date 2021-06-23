@@ -186,8 +186,8 @@ const Schedules = () => {
     setGenerated({ ...generated, kronos: false })
     setLoaded({ ...loaded, agentData: false })
 
-    const _IEXID = 2
-    const _BOOSTID = 3
+    const _IEXID = 0
+    const _BOOSTID = 1
 
     let newAgentData = {}
 
@@ -225,6 +225,8 @@ const Schedules = () => {
 
     let kronosRows = [["BOOST", "STARTDATE", "STARTTIME", "ENDDATE", "ENDTIME", "PAYCODENAME", "NUMBEROFHOURS"]]
 
+    console.log(mappings)
+
     idList.forEach(iexId => {
       datesList.forEach(date => {
         if (schedules[iexId][date] && schedules[iexId][date].output !== "OUT") {
@@ -249,9 +251,11 @@ const Schedules = () => {
           } else if (mappings[daily.output]) {
             if (mappings[daily.output] !== "REMOVE") {
               newRow.push("", "", "", mappings[daily.output], "8")
+              console.log("REMOVED", daily.output, mappings[daily.output])
             }
           } else {
             newRow.push("", "", "", "NF: " + daily.output, "8")
+            console.log("NOT FOUND", daily.output)
           }
           kronosRows.push(newRow)
           console.log(newRow)
