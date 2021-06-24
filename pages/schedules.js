@@ -297,7 +297,7 @@ const Schedules = () => {
         <meta name="description" content="WFM Tool" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"></link>
       </Head>
-      <main className="mb-4">
+      <main className="mb-4 container">
         <h2 className="text-center text-danger">SCHEDULES & KRONOS</h2>
         <div className="d-flex flex-column align-items-center text-center my-4">
           <h3 className="title-text">UPLOADS</h3>
@@ -327,7 +327,7 @@ const Schedules = () => {
             >
               <button className="btn btn-success btn-sm ms-2">Download Exports CSV</button>
             </CSVDownloader>
-            <button className="btn btn-primary btn-sm ms-2" onClick={() => { navigator.clipboard.writeText(`'${exports.map(row => row.join("\t")).join("\n")}'`) }}>Copy to Clipboard</button>
+            <button className="btn btn-primary btn-sm ms-2" onClick={() => { navigator.clipboard.writeText(`${exports.map(row => row.join("\t")).join("\n")}`) }}>Copy to Clipboard</button>
 
 
           </div>

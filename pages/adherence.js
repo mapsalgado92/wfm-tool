@@ -114,7 +114,7 @@ const Adherence = () => {
         </div>
         <div className="container d-flex flex-column align-items-center text-center my-2">
           <h3>ADHERENCE BY DAY</h3>
-          <button className="btn btn-outline-dark btn-sm my-3" onClick={handleGenerateAdherence} disabled={!entries.type === "adherence"}>Generate ADHERENCE</button>
+          <button className="btn btn-outline-dark btn-sm my-3" onClick={handleGenerateAdherence} disabled={entries.type !== "adherence"}>Generate ADHERENCE</button>
           {generated.adherence && <div className="d-flex justify-content-center border p-2 m-2 shadow-sm">
             <input type="text" placeholder="Custom File Name" value={exportsCustomName} onChange={(e) => setExportsCustomName(e.target.value)}></input>
             <CSVDownloader
@@ -126,6 +126,7 @@ const Adherence = () => {
             >
               <button className="btn btn-success btn-sm mx-2">Download Exports CSV</button>
             </CSVDownloader>
+            <button className="btn btn-primary btn-sm ms-2" onClick={() => { navigator.clipboard.writeText(`${exports.map(row => row.join("\t")).join("\n")}`) }}>Copy to Clipboard</button>
           </div>}
         </div>
         <div>
