@@ -297,10 +297,9 @@ const Schedules = () => {
         <meta name="description" content="WFM Tool" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"></link>
       </Head>
-      <main className="mb-4 container">
+      <main className="mb-4">
         <h2 className="text-center text-danger">SCHEDULES & KRONOS</h2>
-        <h1></h1>
-        <div className=" d-flex flex-column align-items-center text-center my-4">
+        <div className="d-flex flex-column align-items-center text-center my-4">
           <h3 className="title-text">UPLOADS</h3>
           <div className="d-flex row">
             <div className="col">
@@ -314,7 +313,7 @@ const Schedules = () => {
             </div>
           </div>
         </div>
-        <div className="container d-flex flex-column align-items-center text-center my-3">
+        <div className=" d-flex flex-column align-items-center text-center my-3">
           <h3>SCHEDULES</h3>
           <div>
             <button className="btn btn-outline-dark btn-sm my-3" onClick={handleGenerateSchedules} disabled={entries.type !== "schedules"}>Generate SCHEDULES</button>

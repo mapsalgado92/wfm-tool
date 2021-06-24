@@ -91,7 +91,7 @@ const AdherenceDateTable = ({ adherence }) => {
         detail && <div className="mt-3 text-center">
           <h5> {`Detail: ${selectedActivity}`} </h5>
           <h6>{adherence[detail.id].name}</h6>
-          <h6>{detail.date}</h6>
+          <h6>{detail.date.split("/")[1] + "/" + detail.date.split("/")[0] + "/" + detail.date.split("/")[2]}</h6>
 
           {adherence[detail.id][detail.date] ? adherence.fields.map(field => {
             if (adherence[detail.id][detail.date][selectedActivity]) {

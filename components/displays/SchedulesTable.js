@@ -64,12 +64,13 @@ const SchedulesTable = ({ dates, iexIds, activities, schedules }) => {
                 let daily = schedules[id][date]
                 if (daily) {
                   if (daily.output) {
+
                     if (daily.output === 'OFF') {
-                      return <button key={"item-" + date + "-" + id} className="schedule-item border border-white btn btn-warning btn-sm p-0" onClick={() => handleSelectDetail(daily.breakdown, schedules[id].name, date)}>{daily.output}</button>
+                      return <button key={"item-" + date + "-" + id} className="schedule-item border border-white btn btn-warning btn-sm p-0" onClick={() => handleSelectDetail(daily.breakdown, schedules[id].name, splitDate[1] + "/" + splitDate[0] + "/" + splitDate[2])}>{daily.output}</button>
                     } else if (daily.hasOpen) {
-                      return <button key={"item-" + date + "-" + id} className="schedule-item border border-white btn btn-light btn-sm p-0" onClick={() => handleSelectDetail(daily.breakdown, schedules[id].name, date)}>{daily.output}</button>
+                      return <button key={"item-" + date + "-" + id} className="schedule-item border border-white btn btn-light btn-sm p-0" onClick={() => handleSelectDetail(daily.breakdown, schedules[id].name, splitDate[1] + "/" + splitDate[0] + "/" + splitDate[2])}>{daily.output}</button>
                     } else {
-                      return <button key={"item-" + date + "-" + id} className="schedule-item border border-white btn btn-danger btn-sm p-0" onClick={() => handleSelectDetail(daily.breakdown, schedules[id].name, date)}>{(daily.output.length < 20) ? daily.output : daily.output.substring(0, 20)}</button>
+                      return <button key={"item-" + date + "-" + id} className="schedule-item border border-white btn btn-danger btn-sm p-0" onClick={() => handleSelectDetail(daily.breakdown, schedules[id].name, splitDate[1] + "/" + splitDate[0] + "/" + splitDate[2])}>{(daily.output.length < 20) ? daily.output : daily.output.substring(0, 20)}</button>
                     }
                   }
                 } else {
