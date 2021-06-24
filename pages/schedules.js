@@ -4,7 +4,7 @@ import SchedulesTable from "../components/displays/SchedulesTable"
 import CSVUploader from "../components/csvHandlers/CSVUploader"
 import SQLTable from "../components/displays/SQLTable"
 import { CSVDownloader } from "react-papaparse"
-import { dateToString, stringToDate, convertTime, incrementDate } from "../snippets/date-handling"
+import { dateToString, stringToDate, convertTime, incrementDate, convertColonTime } from "../snippets/date-handling"
 import { DataContext } from '../contexts/DataContextProvider';
 
 const Schedules = () => {
@@ -36,6 +36,8 @@ const Schedules = () => {
 
   const [kronosCustomName, setKronosCustomName] = useState("")
   const [exportsCustomName, setExportsCustomName] = useState("")
+
+  const [hasLunch, setHasLunch] = useState(true)
 
   const handleUploadSchedules = (csv) => {
 
@@ -104,15 +106,20 @@ const Schedules = () => {
       } else if (!agents[current[_IEXID]][current[_DATE]].breakdown) {
         agents[current[_IEXID]][current[_DATE]].breakdown = [{
           activity: current[_ACTIVITY],
-          start: current[_START],
-          end: current[_END]
+          start: convertColonTime(current[_START]),
+          end: convertColonTime(current[_END])
         }]
       } else {
         agents[current[_IEXID]][current[_DATE]].breakdown.push({
           activity: current[_ACTIVITY],
-          start: current[_START],
-          end: current[_END]
+          start: convertColonTime(current[_START]),
+          end: convertColonTime(current[_END])
         })
+      }
+
+      //Add Lunch to Daily
+      if (/Lunch/.test(current[_ACTIVITY])) {
+        agents[current[_IEXID]][current[_DATE]].lunch = convertColonTime(current[_START])
       }
 
       //Tag if containing Open Time
@@ -127,7 +134,7 @@ const Schedules = () => {
       newDatesList.forEach((date) => {
         if (agents[agent][date]) {
           if (agents[agent][date].hasOpen) {
-            agents[agent][date].output = agents[agent][date].shift.start + " - " + agents[agent][date].shift.end
+            agents[agent][date].output = convertColonTime(agents[agent][date].shift.start) + " - " + convertColonTime(agents[agent][date].shift.end)
           } else if (!agents[agent][date].output) {
             agents[agent][date].output = agents[agent][date].breakdown[0].activity
           }
@@ -142,7 +149,7 @@ const Schedules = () => {
     })
 
     let auxList = newActivityList.filter(activity => !/[0-9]+:[0-9]+/.test(activity))
-    let shiftList = newActivityList.filter(activity => /[0-9]+:[0-9]+/.test(activity)).sort((a, b) => {
+    let shiftList = newActivityList.filter(activity => /[0-9]+:[0-9]+/.test(activity)).sort(/*(a, b) => {
       let splitA = a.split(" ")
       splitA[0] = splitA[0].split(":")
       let weightA = parseInt(splitA[0][0]) * 60 + parseInt(splitA[0][1])
@@ -156,19 +163,27 @@ const Schedules = () => {
         weightB += 12 * 60
       }
       return weightA - weightB
-    })
+    }*/)
 
     newActivityList = [...shiftList, ...auxList]
 
     let newExports = [["IEXID", "AGENT"].concat(newDatesList)].concat(newIdList.map((id) =>
-      [id, agents[id].name].concat(newDatesList.map((date) =>
-        agents[id][date].output
+      [id, agents[id].name].concat(newDatesList.map((date) => {
+        if (hasLunch && agents[id][date].lunch) {
+          return `${agents[id][date].output} (${agents[id][date].lunch})`
+        } else {
+          return `${agents[id][date].output}`
+        }
+
+      }
+
       ))))
 
     console.log(newExports)
 
 
     setSchedules(agents)
+
     setIdList(newIdList)
 
     setGenerated({ ...generated, schedules: true })
@@ -240,11 +255,11 @@ const Schedules = () => {
           } else {
             newRow = ["NF: " + iexId]
           }
-          newRow.push(dateToString(stringToDate(date)))
+          newRow.push(date)
           if (daily.hasOpen) {
             newRow.push(convertTime(daily.shift.start))
             if (parseInt(newRow[newRow.length - 1]) < parseInt(convertTime(daily.shift.end))) {
-              newRow.push(dateToString(stringToDate(date)))
+              newRow.push(date)
             } else {
               newRow.push(incrementDate(date))
             }

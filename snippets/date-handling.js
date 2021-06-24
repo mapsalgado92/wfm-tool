@@ -44,3 +44,30 @@ export const convertTime = (time) => {
   }
   return out
 }
+
+export const convertColonTime = (time) => {
+  let timeAux = time.split(" ")
+  timeAux[0] = timeAux[0].split(":").map(val => parseInt(val))
+
+  let out = 0
+  if (timeAux[0][0] === 12) {
+    timeAux[1] === "AM" ? out = "00:" : out = "12:"
+
+  } else {
+    timeAux[1] === "AM" ? out = `${timeAux[0][0]}:` : out = `${timeAux[0][0] + 12}:`
+    if (out.length === 2) {
+      out = "0" + out
+    }
+  }
+
+  if (timeAux[0][1] >= 10) {
+    out += timeAux[0][1]
+  } else {
+    out += "0" + timeAux[0][1]
+  }
+
+  if (out.length === 2) {
+    out = "0" + out
+  }
+  return out
+}

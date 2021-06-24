@@ -104,8 +104,8 @@ const SchedulesTable = ({ dates, iexIds, activities, schedules }) => {
         <h6> {detail.agent}</h6>
         <h6> {detail.date}</h6>
 
-        {detail.breakdown ? detail.breakdown.map(detail =>
-          <div>
+        {detail.breakdown ? detail.breakdown.map((detail, index) =>
+          <div key={"detail-entry-" + index}>
             {`${detail.activity}: ${detail.start} to ${detail.end}`}
           </div>) : <div>
           No details
