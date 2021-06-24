@@ -8,7 +8,7 @@ const Header = () => {
   const { entries } = useContext(DataContext)
 
   return (
-    <nav id="top" className="navbar">
+    <nav className="navbar">
       <div className="container">
         <a className="navbar-brand text-danger" href="/">WFM TOOL</a>
 
