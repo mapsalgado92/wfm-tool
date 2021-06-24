@@ -37,7 +37,7 @@ const Schedules = () => {
   const [kronosCustomName, setKronosCustomName] = useState("")
   const [exportsCustomName, setExportsCustomName] = useState("")
 
-  const [hasLunch, setHasLunch] = useState(true)
+  const [hasLunch, setHasLunch] = useState(false)
 
   const handleUploadSchedules = (csv) => {
 
@@ -313,7 +313,7 @@ const Schedules = () => {
           <h3>SCHEDULES</h3>
           <div>
             <button className="btn btn-outline-dark btn-sm my-3" onClick={handleGenerateSchedules} disabled={entries.type !== "schedules"}>Generate SCHEDULES</button>
-            <button className={"btn btn-sm my-3 ms-2 ".concat((hasLunch) ? "btn-danger" : "btn-outline-danger")} onClick={() => setHasLunch(!hasLunch)} disabled={entries.type !== "schedules"}>w/ lunch</button>
+            <button className={"btn btn-sm my-3 ms-2 ".concat((hasLunch) ? "btn-danger" : "btn-outline-secondary")} onClick={() => { setHasLunch(!hasLunch) }} disabled={entries.type !== "schedules"}>w/ lunch</button>
           </div>
           {generated.schedules && <div className="d-flex justify-content-center border p-2 shadow-sm">
             <input type="text" placeholder="Custom File Name" value={exportsCustomName} onChange={(e) => setExportsCustomName(e.target.value)}></input>
