@@ -92,6 +92,11 @@ const Schedules = () => {
       //Add Agent and/or Date to 'agents'
       if (!agents[current[_IEXID]]) {
         agents[current[_IEXID]] = { name: current[_AGENT] }
+        if (agentData[current[_IEXID]]) {
+          agents[current[_IEXID]].boost = agentData[current[_IEXID]]
+        } else {
+          agents[current[_IEXID]].boost = "no data"
+        }
       }
       if (!agents[current[_IEXID]][current[_DATE]]) {
         agents[current[_IEXID]][current[_DATE]] = {}
@@ -167,8 +172,8 @@ const Schedules = () => {
 
     newActivityList = [...shiftList, ...auxList]
 
-    let newExports = [["IEXID", "AGENT"].concat(newDatesList)].concat(newIdList.map((id) =>
-      [id, agents[id].name].concat(newDatesList.map((date) => {
+    let newExports = [["BOOSTID", "IEXID", "AGENT"].concat(newDatesList)].concat(newIdList.map((id) =>
+      [agents[id].boost, id, agents[id].name].concat(newDatesList.map((date) => {
         if (hasLunch && agents[id][date].lunch) {
           return `${agents[id][date].output} (${agents[id][date].lunch})`
         } else {
