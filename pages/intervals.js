@@ -210,7 +210,7 @@ const Intervals = () => {
               <Dropdown.Toggle variant="dark" size="sm" id="dropdown-basic">
                 {selected.date ? selected.date : "All Dates"}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu style={{ maxHeight: "300px", overflowY: "scroll" }}>
                 <Dropdown.Item onClick={() => setSelected({ ...selected, date: null })}>All Dates</Dropdown.Item>
                 {entries.dates && entries.dates.map(date =>
                   <Dropdown.Item onClick={() => setSelected({ ...selected, date: date })}>{date}</Dropdown.Item>
@@ -222,7 +222,7 @@ const Intervals = () => {
                 {selected.agent ? selected.agent : "All Agents"}
               </Dropdown.Toggle>
 
-              <Dropdown.Menu style={{ maxHeight: "300px", overflow: "scroll" }}>
+              <Dropdown.Menu style={{ maxHeight: "300px", overflowY: "scroll" }}>
                 <Dropdown.Item onClick={() => setSelected({ ...selected, agent: null })}>All Agents</Dropdown.Item>
                 {entries.agents && entries.agents.map(agent =>
                   <Dropdown.Item onClick={() => setSelected({ ...selected, agent: agent })}>{agent}</Dropdown.Item>
