@@ -205,13 +205,11 @@ const Intervals = () => {
         <div className="container d-flex flex-column align-items-center text-center my-2">
           <h3>INTERVAL EXPORT AND CHART</h3>
           <div className="d-flex align-items-center my-2">
-
             <button className="btn btn-outline-dark btn-sm my-2 mx-2" onClick={handleGenerateIntervals} disabled={entries.type !== "intervals"}>Generate Intervals</button>
             <Dropdown className="mx-1">
               <Dropdown.Toggle variant="dark" size="sm" id="dropdown-basic">
                 {selected.date ? selected.date : "All Dates"}
               </Dropdown.Toggle>
-
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => setSelected({ ...selected, date: null })}>All Dates</Dropdown.Item>
                 {entries.dates && entries.dates.map(date =>
@@ -224,7 +222,7 @@ const Intervals = () => {
                 {selected.agent ? selected.agent : "All Agents"}
               </Dropdown.Toggle>
 
-              <Dropdown.Menu>
+              <Dropdown.Menu style={{ maxHeight: "300px", overflow: "scroll" }}>
                 <Dropdown.Item onClick={() => setSelected({ ...selected, agent: null })}>All Agents</Dropdown.Item>
                 {entries.agents && entries.agents.map(agent =>
                   <Dropdown.Item onClick={() => setSelected({ ...selected, agent: agent })}>{agent}</Dropdown.Item>
@@ -244,7 +242,6 @@ const Intervals = () => {
             </Dropdown>
           </div>
           {generated.intervals && <div className="d-flex justify-content-center border p-2 m-2 shadow-sm">
-
             <input type="text" placeholder="Custom File Name" value={exportsCustomName} onChange={(e) => setExportsCustomName(e.target.value)}></input>
             <CSVDownloader
               data={exports}
@@ -257,7 +254,6 @@ const Intervals = () => {
             </CSVDownloader>
             <button className="btn btn-primary btn-sm" onClick={() => { navigator.clipboard.writeText(`${exports.map(row => row.join("\t")).join("\n")}`) }}>Copy to Clipboard</button>
           </div>}
-
           {chartData && <div className="mt-2">
             <h3>BARS</h3>
             <div className="container">
@@ -283,7 +279,6 @@ const Intervals = () => {
             </div>
           </div>}
         </div>
-
       </main>
     </Fragment >
   )
