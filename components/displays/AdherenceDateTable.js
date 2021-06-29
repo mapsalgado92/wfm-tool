@@ -95,7 +95,7 @@ const AdherenceDateTable = ({ adherence }) => {
 
           {adherence[detail.id][detail.date] ? adherence.fields.map(field => {
             if (adherence[detail.id][detail.date][selectedActivity]) {
-              return <div>
+              return <div key={field + detail.id + detail.date}>
                 {`${field}: ${adherence[detail.id][detail.date][selectedActivity][field]}`}
               </div>
             }

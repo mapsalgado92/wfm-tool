@@ -71,3 +71,50 @@ export const convertColonTime = (time) => {
   }
   return out
 }
+
+export const considerPM = (time, isFrom) => {
+  let split = time.split(" ")
+  if (/12:/.test(split[0])) {
+    if (split[1] === "AM") {
+      if (/12:00/.test(split[0])) {
+        if (isFrom) {
+          return 0
+        } else {
+          return 1440
+        }
+      } else {
+        return getMinutes(split[0]) - 720
+      }
+
+    } else {
+      return getMinutes(split[0])
+    }
+  } else {
+    if (split[1] === "AM") {
+      return getMinutes(split[0])
+    } else {
+      return getMinutes(split[0]) + 720
+    }
+  }
+}
+
+export const getHours = (time) => {
+  let splitTime = time.split(":")
+  return parseInt(splitTime[0]) + parseInt(splitTime[1]) / 60
+}
+
+export const getMinutes = (time) => {
+  return getHours(time) * 60
+}
+
+export const getTime = (minutes) => {
+  let d = new Date()
+  d.setHours(0)
+  d.setMinutes(minutes)
+  let hh = d.getHours()
+  let mm = d.getMinutes()
+  if (mm < 10) {
+    mm = "0" + mm
+  }
+  return hh + ":" + mm
+}

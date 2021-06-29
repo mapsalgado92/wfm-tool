@@ -4,6 +4,7 @@ import { CSVDownloader } from 'react-papaparse'
 import AdherenceConverter from '../components/converters/AdherenceConverter'
 import AuditTrailConverter from '../components/converters/AuditTrailConverter'
 import ScheduleConverter from '../components/converters/ScheduleConverter'
+import IntervalConverter from '../components/converters/IntervalsConverter'
 import CSVUploader from '../components/csvHandlers/CSVUploader'
 import SQLTable from '../components/displays/SQLTable'
 
@@ -75,6 +76,9 @@ export const EntriesConverter = () => {
             </div>
             <div className="col">
               <AdherenceConverter raw={raw} exportConverted={handleConvert} />
+            </div>
+            <div className="col">
+              <IntervalConverter raw={raw} exportConverted={handleConvert} />
             </div>
           </div>
         </div>
