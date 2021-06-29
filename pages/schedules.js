@@ -277,14 +277,14 @@ const Schedules = () => {
             }
             newRow.push(convertTime(daily.shift.end), "", "")
           } else if (daily.output === "OFF") {
-            newRow.push("", "", "", "OFF", specShifts[_iexId])
+            newRow.push("", "", "", "OFF", specShifts[iexId])
           } else if (mappings[daily.output]) {
             if (mappings[daily.output] !== "REMOVE") {
-              newRow.push("", "", "", mappings[daily.output], specShifts[_iexId])
+              newRow.push("", "", "", mappings[daily.output], specShifts[iexId])
 
             }
           } else {
-            newRow.push("", "", "", "NF: " + daily.output, specShifts[_iexId])
+            newRow.push("", "", "", "NF: " + daily.output, specShifts[iexId])
 
           }
           kronosRows.push(newRow)
