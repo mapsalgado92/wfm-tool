@@ -20,12 +20,14 @@ const Schedules = () => {
   const [activityList, setActivityList] = useState([])
 
   const [agentData, setAgentData] = useState({})
+  const [specShifts, setSpecShifts] = useState({})
 
   const [mappings, setMappings] = useState({})
 
   const [loaded, setLoaded] = useState({
     schedules: false,
     agentData: false,
+    specShifts: false,
     mappings: false
   })
 
@@ -204,25 +206,30 @@ const Schedules = () => {
   const handleUploadAgentData = (csv) => {
 
     setGenerated({ ...generated, kronos: false })
-    setLoaded({ ...loaded, agentData: false })
+    setLoaded({ ...loaded, agentData: false, specShifts: false })
 
     const _IEXID = 2
     const _BOOSTID = 3
+    const _SPEC_SHIFT = 4
 
     let newAgentData = {}
-
-    console.log(csv[1], csv[1][_IEXID], csv[1][_BOOSTID])
+    let newSpecShifts = {}
 
     csv.slice(1).forEach((entry) => {
 
       newAgentData[entry[_IEXID]] = entry[_BOOSTID]
-
+      if (entry[_SPEC_SHIFT] !== "") {
+        newSpecShifts[entry[_IEXID]] = entry[_SPEC_SHIFT]
+      } else {
+        newSpecShifts[entry[_IEXID]] = 8
+      }
     })
 
 
     setAgentData(newAgentData)
+    setSpecShifts(newSpecShifts)
 
-    setLoaded({ ...loaded, agentData: true })
+    setLoaded({ ...loaded, agentData: true, specShifts: true })
 
   }
 
@@ -270,18 +277,18 @@ const Schedules = () => {
             }
             newRow.push(convertTime(daily.shift.end), "", "")
           } else if (daily.output === "OFF") {
-            newRow.push("", "", "", "OFF", "8")
+            newRow.push("", "", "", "OFF", specShifts[_iexId])
           } else if (mappings[daily.output]) {
             if (mappings[daily.output] !== "REMOVE") {
-              newRow.push("", "", "", mappings[daily.output], "8")
-              console.log("FOUND", daily.output, mappings[daily.output])
+              newRow.push("", "", "", mappings[daily.output], specShifts[_iexId])
+
             }
           } else {
-            newRow.push("", "", "", "NF: " + daily.output, "8")
-            console.log("NOT FOUND", daily.output)
+            newRow.push("", "", "", "NF: " + daily.output, specShifts[_iexId])
+
           }
           kronosRows.push(newRow)
-          console.log(newRow)
+
         }
       })
     })
