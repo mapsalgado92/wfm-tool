@@ -22,7 +22,7 @@ const StackedComboChart = ({ data, areas, bars }) => {
         <CartesianGrid strokeDasharray="1 1" />
         <XAxis dataKey="name"
           allowDataOverflow={true}
-          interval={0} // display all of values, instead of the default 5
+          interval={1} // display all of values, instead of the default 5
           angle={-90} // force text to be 90, reading towards the graph
           dx={-6}
           textAnchor="end" // rather than setting "dy={50}" or something 

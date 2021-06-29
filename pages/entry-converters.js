@@ -67,7 +67,7 @@ export const EntriesConverter = () => {
 
         <div className=" d-flex flex-column align-items-center text-center my-4">
           <h3>CONVERTERS</h3>
-          <div className="row">
+          <div className="row my-2">
             <div className="col">
               <ScheduleConverter raw={raw} exportConverted={handleConvert} />
             </div>

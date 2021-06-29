@@ -203,7 +203,9 @@ const Intervals = () => {
           <CSVUploader loadedHandler={handleUploadIntervals} removeHandler={() => setLoaded({ ...loaded, intervals: false })} header="Intervals CSV" label="Insert Intervals CSV" />
         </div>
         <div className="container d-flex flex-column align-items-center text-center my-2">
-          <div className="d-flex align-items-center">
+          <h3>INTERVAL EXPORT AND CHART</h3>
+          <div className="d-flex align-items-center my-2">
+
             <button className="btn btn-outline-dark btn-sm my-2 mx-2" onClick={handleGenerateIntervals} disabled={entries.type !== "intervals"}>Generate Intervals</button>
             <Dropdown className="mx-1">
               <Dropdown.Toggle variant="dark" size="sm" id="dropdown-basic">
@@ -242,6 +244,7 @@ const Intervals = () => {
             </Dropdown>
           </div>
           {generated.intervals && <div className="d-flex justify-content-center border p-2 m-2 shadow-sm">
+
             <input type="text" placeholder="Custom File Name" value={exportsCustomName} onChange={(e) => setExportsCustomName(e.target.value)}></input>
             <CSVDownloader
               data={exports}
@@ -255,8 +258,8 @@ const Intervals = () => {
             <button className="btn btn-primary btn-sm" onClick={() => { navigator.clipboard.writeText(`${exports.map(row => row.join("\t")).join("\n")}`) }}>Copy to Clipboard</button>
           </div>}
 
-          {chartData && <div>
-            <h3>Bars</h3>
+          {chartData && <div className="mt-2">
+            <h3>BARS</h3>
             <div className="container">
               {intervals && intervals.scheduledAuxs.map(aux =>
                 <button className={selected.bars.includes("SCH_" + aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-primary m-1"} onClick={() => handleSelectedBars("SCH_" + aux)}>{"SCH_" + aux}</button>
@@ -265,7 +268,7 @@ const Intervals = () => {
               {intervals && intervals.actualAuxs.map(aux =>
                 <button className={selected.bars.includes(aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-secondary m-1"} onClick={() => handleSelectedBars(aux)}>{aux}</button>
               )}</div>
-            <h3>Areas</h3>
+            <h3>AREAS</h3>
             <div className="container">
               {intervals && intervals.scheduledAuxs.map(aux =>
                 <button className={selected.areas.includes("SCH_" + aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-primary m-1"} onClick={() => handleSelectedAreas("SCH_" + aux)}>{"SCH_" + aux}</button>
@@ -274,8 +277,8 @@ const Intervals = () => {
               {intervals && intervals.actualAuxs.map(aux =>
                 <button className={selected.areas.includes(aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-secondary m-1"} onClick={() => handleSelectedAreas(aux)}>{aux}</button>
               )}</div>
-
-            <div style={{ height: "85vh", width: "95vw" }} >
+            <h3 style={{ marginTop: "0.5em", marginBottom: "-1em" }}>CHART</h3>
+            <div className="container" style={{ height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
               <StackedComboChart data={chartData} areas={selected.areas} bars={selected.bars} />
             </div>
           </div>}
