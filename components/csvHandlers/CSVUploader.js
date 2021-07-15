@@ -1,5 +1,5 @@
 import { CSVReader } from 'react-papaparse'
-import { Fragment, useRef } from 'react'
+import { useRef } from 'react'
 
 const CSVUploader = ({ loadedHandler, removeHandler, header, label }) => {
 

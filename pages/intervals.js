@@ -7,6 +7,8 @@ import { Dropdown } from "react-bootstrap"
 import { considerPM, getTime } from "../snippets/date-handling"
 import StackedComboChart from "../components/data-visualization/StackedComboChart"
 
+import SQLTable from "../components/displays/SQLTable"
+
 
 const Intervals = () => {
 
@@ -18,8 +20,14 @@ const Intervals = () => {
 
   const [selected, setSelected] = useState({ date: null, agent: null, interval: 15, areas: [], bars: [] })
 
-  const [exports, setExports] = useState({ intervals: null })
+  const [exports, setExports] = useState(null)
   const [exportsCustomName, setExportsCustomName] = useState("")
+
+  const [percentage, setPercentage] = useState({
+    scheduled: { isConverted: false, data: { header: null, entries: null } },
+    actual: { isConverted: false, data: { header: null, entries: null } }
+  })
+
 
   const [chartData, setChartData] = useState(null)
 
@@ -145,8 +153,12 @@ const Intervals = () => {
 
     let uniqueSchedAuxs = scheduledAuxs.map(aux => "SCH_" + aux)
 
-    let dataRows = [["interval", ...uniqueSchedAuxs, ...actualAuxs]]
+    //GENERATE EXPORTS and CHART DATA
+
+    let dataRows = [["Interval", ...uniqueSchedAuxs, ...actualAuxs]]
     let newChartData = []
+    let totalsRow = dataRows[0].map(val => 0)
+    totalsRow[0] = "Totals"
 
     for (let i = 0; i < intervals.length; i++) {
       let newRow = [getTime(intervals[i])]
@@ -160,11 +172,59 @@ const Intervals = () => {
         newRow.push(output.actual[aux][i])
         newChartItem[aux] = output.actual[aux][i]
       })
+      totalsRow = totalsRow.map((val, index) => { if (val !== "Totals") { return val + newRow[index] } else { return val } })
       dataRows.push(newRow)
       newChartData.push(newChartItem)
     }
+    dataRows.push(totalsRow)
 
-    console.log(newChartData)
+    //Schedules and Actuals %
+
+    let firstActual = uniqueSchedAuxs.length + 1
+
+    let scheduledPercent = [["Interval", ...uniqueSchedAuxs]]
+
+    for (let i = 1; i < dataRows.length; i++) {
+      let slicedRow = dataRows[i].slice(1, firstActual)
+      let intervalTotal = 0
+      for (let j = 0; j < slicedRow.length; j++) {
+        intervalTotal += slicedRow[j]
+      }
+
+      scheduledPercent.push([dataRows[i][0], ...slicedRow.map(val => {
+        if (intervalTotal > 0) {
+          console.log(intervalTotal, val)
+          return (val / intervalTotal * 100).toFixed(1)
+        } else {
+          return 0
+        }
+      })])
+    }
+
+    let actualPercent = [["Interval", ...actualAuxs]]
+
+    for (let i = 1; i < dataRows.length; i++) {
+      let slicedRow = dataRows[i].slice(firstActual)
+      let intervalTotal = 0
+      for (let j = 0; j < slicedRow.length; j++) {
+        intervalTotal += slicedRow[j]
+      }
+
+      actualPercent.push([dataRows[i][0], ...slicedRow.map(val => {
+        if (intervalTotal > 0) {
+          console.log(intervalTotal, val)
+          return (val / intervalTotal * 100).toFixed(1)
+        } else {
+          return 0
+        }
+      })])
+
+    }
+
+    console.log(actualPercent)
+
+
+    setPercentage({ actual: { isConverted: true, data: { header: actualPercent[0], entries: actualPercent.slice(1) } }, scheduled: { isConverted: true, data: { header: scheduledPercent[0], entries: scheduledPercent.slice(1) } } })
 
     setIntervals(output)
     setExports(dataRows)
@@ -255,7 +315,7 @@ const Intervals = () => {
             <button className="btn btn-primary btn-sm" onClick={() => { navigator.clipboard.writeText(`${exports.map(row => row.join("\t")).join("\n")}`) }}>Copy to Clipboard</button>
           </div>}
           {chartData && <div className="mt-2">
-            <h3>BARS</h3>
+            <h4>Bars</h4>
             <div className="container">
               {intervals && intervals.scheduledAuxs.map(aux =>
                 <button className={selected.bars.includes("SCH_" + aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-primary m-1"} onClick={() => handleSelectedBars("SCH_" + aux)}>{"SCH_" + aux}</button>
@@ -264,7 +324,7 @@ const Intervals = () => {
               {intervals && intervals.actualAuxs.map(aux =>
                 <button className={selected.bars.includes(aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-secondary m-1"} onClick={() => handleSelectedBars(aux)}>{aux}</button>
               )}</div>
-            <h3>AREAS</h3>
+            <h4>Areas</h4>
             <div className="container">
               {intervals && intervals.scheduledAuxs.map(aux =>
                 <button className={selected.areas.includes("SCH_" + aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-primary m-1"} onClick={() => handleSelectedAreas("SCH_" + aux)}>{"SCH_" + aux}</button>
@@ -273,11 +333,19 @@ const Intervals = () => {
               {intervals && intervals.actualAuxs.map(aux =>
                 <button className={selected.areas.includes(aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-secondary m-1"} onClick={() => handleSelectedAreas(aux)}>{aux}</button>
               )}</div>
-            <h3 style={{ marginTop: "0.5em", marginBottom: "-1em" }}>CHART</h3>
-            <div className="container" style={{ height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
+
+            <div className="container" style={{ marginTop: "0.5em", height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
               <StackedComboChart data={chartData} areas={selected.areas} bars={selected.bars} />
             </div>
           </div>}
+          {generated.intervals && <div className="d-flex justify-content-center p-2 m-2">
+            <SQLTable input={percentage.scheduled} title="Scheduled %" />
+
+          </div>}
+          {generated.intervals && <div className="d-flex justify-content-center p-2 m-2">
+            <SQLTable input={percentage.actual} title="Actual %" />
+          </div>}
+
         </div>
       </main>
     </Fragment >
