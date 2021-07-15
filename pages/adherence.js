@@ -6,7 +6,6 @@ import AdherenceDateTable from "../components/displays/AdherenceDateTable"
 import { dateToString, stringToDate, convertTime, incrementDate } from "../snippets/date-handling"
 
 import { DataContext } from '../contexts/DataContextProvider';
-import StackedComboChart from "../components/data-visualization/StackedComboChart"
 
 
 const Adherence = () => {

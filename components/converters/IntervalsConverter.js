@@ -134,7 +134,7 @@ const IntervalsConverter = ({ raw, exportConverted }) => {
     console.log(dates)
 
     exportConverted({ header, entries })
-    setEntries({ data: [header, ...entries], type: "intervals", dates, agents })
+    setEntries({ data: [header, ...entries], type: "intervals", dates: dates.sort(), agents })
   }
 
   return (
