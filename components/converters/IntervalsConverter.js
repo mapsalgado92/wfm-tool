@@ -130,8 +130,8 @@ const IntervalsConverter = ({ raw, exportConverted }) => {
       }
     }
 
-    console.log(entries)
-    console.log(dates)
+    console.log("ENRIES", entries)
+    console.log("DATES", dates)
 
     exportConverted({ header, entries })
     setEntries({ data: [header, ...entries], type: "intervals", dates: dates.sort(), agents })

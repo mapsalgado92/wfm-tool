@@ -272,7 +272,7 @@ const Intervals = () => {
               </Dropdown.Toggle>
               <Dropdown.Menu style={{ maxHeight: "300px", overflowY: "scroll" }}>
                 <Dropdown.Item onClick={() => setSelected({ ...selected, date: null })}>All Dates</Dropdown.Item>
-                {entries.dates && entries.dates.map(date =>
+                {entries.dates && entries.dates.sort().map(date =>
                   <Dropdown.Item onClick={() => setSelected({ ...selected, date: date })}>{date}</Dropdown.Item>
                 )}
               </Dropdown.Menu>
