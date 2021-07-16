@@ -7,6 +7,7 @@ import ScheduleConverter from '../components/converters/ScheduleConverter'
 import IntervalConverter from '../components/converters/IntervalsConverter'
 import CSVUploader from '../components/csvHandlers/CSVUploader'
 import SQLTable from '../components/displays/SQLTable'
+import IntradayConverter from '../components/converters/IntradayConverter'
 
 export const EntriesConverter = () => {
 
@@ -80,11 +81,13 @@ export const EntriesConverter = () => {
             <div className="col">
               <IntervalConverter raw={raw} exportConverted={handleConvert} />
             </div>
+            <div className="col">
+              <IntradayConverter raw={raw} exportConverted={handleConvert} />
+            </div>
           </div>
         </div>
 
         {converted.isConverted && <div className=" d-flex flex-column align-items-center text-center my-4">
-          <h3>DATA VIEWER</h3>
           <div className="d-flex border p-2 m-2 shadow-sm">
             <input type="text" placeholder="Custom Report Name" value={customName} onChange={handleChange}></input>
             <CSVDownloader
@@ -97,7 +100,7 @@ export const EntriesConverter = () => {
               <button className="btn btn-success mx-2 btn-sm">Download Converted CSV</button>
             </CSVDownloader>
           </div>
-          <SQLTable input={converted} title=" " />
+          <SQLTable input={converted} />
         </div>
         }
 

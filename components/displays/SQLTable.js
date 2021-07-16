@@ -2,7 +2,9 @@ const SQLTable = ({ input, title }) => {
 
   return (
     <div className="d-flex flex-column align-items-center text-center">
-      <span className="h3">{title ? title : "DATA VIEWER"}</span>
+      <span className="h3">{title ? title : "DATA VIEWER"}
+        <button className="ms-3 btn btn-primary btn-sm" onClick={() => { navigator.clipboard.writeText(`${[input.data.header, ...input.data.entries].map(row => row.join("\t")).join("\n")}`) }}>Copy to Clipboard</button>
+      </span>
       {input.isConverted && (input.data.entries.length > 0) ?
         <table className="table">
           <thead>
