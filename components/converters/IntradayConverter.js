@@ -5,7 +5,7 @@
 //// entries: 2D matrix with the entries matching the header fields.
 import { useContext } from 'react'
 import { DataContext } from '../../contexts/DataContextProvider';
-import { dateToString, stringToDate } from '../../snippets/date-handling';
+import { convertColonTime, dateToString, stringToDate } from '../../snippets/date-handling';
 
 const IntradayConverter = ({ raw, exportConverted }) => {
 
@@ -30,7 +30,7 @@ const IntradayConverter = ({ raw, exportConverted }) => {
     let dates = []
 
     let current = {
-      date: null
+      date: null,
     }
 
     for (let i = 9; i < dataRows.length - 15; i++) {
@@ -40,13 +40,32 @@ const IntradayConverter = ({ raw, exportConverted }) => {
         if (!dates.includes(current.date)) {
           dates.push(current.date)
         }
-      } else if (/[0-9]+:[0-9]+/.test(aux) || /Total/.test(aux) || /Average/.test(aux)) {
+      } else if (/[0-9]+:[0-9]+/.test(aux)) {
+        let time = convertColonTime(aux)
+        let newEntry = [current.date, time, dataRows[i][_CONTACTS], dataRows[i][_ACT_CONTACTS], dataRows[i][_AHT], dataRows[i][_ACT_AHT], dataRows[i][_SL], dataRows[i][_ACT_SL], dataRows[i][_REQUIRED], dataRows[i][_ACT_REQUIRED]]
+        entries.push(newEntry)
+
+      } else if (/Total/.test(aux) || /Average/.test(aux)) {
         let newEntry = [current.date, aux, dataRows[i][_CONTACTS], dataRows[i][_ACT_CONTACTS], dataRows[i][_AHT], dataRows[i][_ACT_AHT], dataRows[i][_SL], dataRows[i][_ACT_SL], dataRows[i][_REQUIRED], dataRows[i][_ACT_REQUIRED]]
         entries.push(newEntry)
       }
     }
 
-    console.log(entries)
+    let interval = 60
+
+    if (entries[1][1] === "00:15") {
+      interval = 15
+    } else if (entries[1][1] === "00:30") {
+      interval = 30
+    }
+
+    entries = entries.map(entry => entry.map((val, index) => {
+      if (index === 9 || index === 8) {
+        return val * interval
+      } else {
+        return val
+      }
+    }))
 
     exportConverted({ header, entries })
     setEntries({ data: [header, ...entries], type: "intraday", dates })

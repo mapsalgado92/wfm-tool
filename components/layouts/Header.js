@@ -28,6 +28,9 @@ const Header = () => {
           <li className="nav-item">
             <Link href="/intervals" ><a className="nav-link mx-3 border-bottom" >Intervals {(entries.type === "intervals") && <span className="badge bg-danger">E</span>}</a></Link>
           </li>
+          <li className="nav-item">
+            <Link href="/intraday" ><a className="nav-link mx-3 border-bottom" >Intraday {(entries.type === "intraday") && <span className="badge bg-danger">E</span>}</a></Link>
+          </li>
         </ul>
       </div>
     </nav>

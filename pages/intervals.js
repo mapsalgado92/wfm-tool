@@ -249,6 +249,23 @@ const Intervals = () => {
     }
   }
 
+  const exportChartData = () => {
+
+    let headerRow = [...selected.areas, ...selected.bars]
+    let data = chartData.map(interval => [...selected.areas, ...selected.bars].map(aux => interval[aux]))
+    let totalsRow = [...selected.areas, ...selected.bars].map((aux) => {
+      let newTotal = 0
+      chartData.forEach(interval => {
+        newTotal += interval[aux]
+      })
+      return newTotal
+    })
+
+
+
+    return [headerRow, ...data, totalsRow]
+  }
+
   return (
     <Fragment>
       <Head>
@@ -305,7 +322,7 @@ const Intervals = () => {
             <input type="text" placeholder="Custom File Name" value={exportsCustomName} onChange={(e) => setExportsCustomName(e.target.value)}></input>
             <CSVDownloader
               data={exports}
-              filename={'ADH_' + exportsCustomName}
+              filename={'INT_' + exportsCustomName}
               config={
                 { encoding: "ISO-8859-1" }
               }
@@ -318,23 +335,34 @@ const Intervals = () => {
             <h4>Bars</h4>
             <div className="container">
               {intervals && intervals.scheduledAuxs.map(aux =>
-                <button className={selected.bars.includes("SCH_" + aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-primary m-1"} onClick={() => handleSelectedBars("SCH_" + aux)}>{"SCH_" + aux}</button>
+                <button key={"select-bar-" + aux} className={selected.bars.includes("SCH_" + aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-primary m-1"} onClick={() => handleSelectedBars("SCH_" + aux)}>{"SCH_" + aux}</button>
               )}
               <br />
               {intervals && intervals.actualAuxs.map(aux =>
-                <button className={selected.bars.includes(aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-secondary m-1"} onClick={() => handleSelectedBars(aux)}>{aux}</button>
+                <button key={"select-bar" + aux} className={selected.bars.includes(aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-secondary m-1"} onClick={() => handleSelectedBars(aux)}>{aux}</button>
               )}</div>
             <h4>Areas</h4>
             <div className="container">
               {intervals && intervals.scheduledAuxs.map(aux =>
-                <button className={selected.areas.includes("SCH_" + aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-primary m-1"} onClick={() => handleSelectedAreas("SCH_" + aux)}>{"SCH_" + aux}</button>
+                <button key={"select-area-" + aux} className={selected.areas.includes("SCH_" + aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-primary m-1"} onClick={() => handleSelectedAreas("SCH_" + aux)}>{"SCH_" + aux}</button>
               )}
               <br />
               {intervals && intervals.actualAuxs.map(aux =>
-                <button className={selected.areas.includes(aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-secondary m-1"} onClick={() => handleSelectedAreas(aux)}>{aux}</button>
+                <button key={"select-area" + aux} className={selected.areas.includes(aux) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-secondary m-1"} onClick={() => handleSelectedAreas(aux)}>{aux}</button>
               )}</div>
+            <br />
 
-            <div className="container" style={{ marginTop: "0.5em", height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
+            <CSVDownloader
+              data={exportChartData()}
+              filename={`intervals_${selected.date ? selected.date : entries.dates[0] + "_to_" + entries.dates[entries.dates.length - 1]}`}
+              config={
+                { encoding: "ISO-8859-1" }
+              }
+            >
+              <button className="btn btn-success btn-sm mx-2">Download Chart Data</button>
+            </CSVDownloader>
+
+            <div className="container" style={{ height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
               <StackedComboChart data={chartData} areas={selected.areas} bars={selected.bars} />
             </div>
           </div>}
