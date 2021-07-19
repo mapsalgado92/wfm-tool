@@ -11,15 +11,11 @@ const Intraday = () => {
 
   const { entries, setEntries } = useContext(DataContext)
 
-  const [intraday, setIntraday] = useState(null)
   const [intervals, setIntervals] = useState(null)
+  const [intHeaders, setIntHeaders] = useState([])
   const [loaded, setLoaded] = useState({ intraday: false, intervals: false })
-  const [generated, setGenerated] = useState({ intervals: false })
 
-  const [selected, setSelected] = useState({ date: null })
-
-  const [exports, setExports] = useState(null)
-  const [exportsCustomName, setExportsCustomName] = useState("")
+  const [selected, setSelected] = useState({ date: null, schOpen: [], actOpen: [] })
 
   const [chartData, setChartData] = useState(null)
 
@@ -46,13 +42,11 @@ const Intraday = () => {
     setLoaded({ ...loaded, intervals: false })
     setIntervals(csv)
     setLoaded({ ...loaded, intervals: true })
-    console.log(csv)
+
 
   }
 
   const handleGenerateIntraday = () => {
-
-    setGenerated({ intraday: false })
 
     const _DATE = 0
     const _TIME = 1
@@ -63,14 +57,12 @@ const Intraday = () => {
     data.pop()
 
     if (loaded.intervals) {
-      console.log(intervals)
       headers = headers.concat(intervals[0])
+      setIntHeaders(intervals[0])
       data = data.map((entry, index) => entry.concat(intervals[index + 1]))
     }
 
     data.pop()
-
-    console.log(headers, data)
 
     let newChartData = []
 
@@ -78,19 +70,56 @@ const Intraday = () => {
       let newChartItem = { name: data[i][_TIME] }
 
       headers.forEach((header, j) => {
-        newChartItem[header] = data[i][j]
+        newChartItem[header] = parseInt(data[i][j])
       })
+
+      if (selected.actOpen) {
+        let newActOpen = 0
+        selected.actOpen.forEach(header => {
+          console.log("NEW_ACT_OPEN", newActOpen, header, newChartItem[header])
+          if (newChartItem[header]) {
+            newActOpen += parseInt(newChartItem[header])
+          }
+        })
+        newChartItem["ACT_OPEN"] = newActOpen
+        console.log("ACT_OPEN", newActOpen)
+      }
+      if (selected.schOpen) {
+        let newSchOpen = 0
+        selected.schOpen.forEach(header => {
+          console.log("NEW_SCH_OPEN", newSchOpen, header, newChartItem[header])
+          if (newChartItem[header]) {
+            newSchOpen += parseInt(newChartItem[header])
+          }
+        })
+        newChartItem["SCH_OPEN"] = newSchOpen
+        console.log("SCH_OPEN", newSchOpen)
+      }
 
       newChartData.push(newChartItem)
     }
 
     //Schedules and Actuals %
 
-    setIntraday(data)
-    setExports({ data, header: headers })
     setChartData(newChartData)
-    setGenerated({ intraday: true })
 
+
+  }
+
+  const handleSelectActOpen = (aux) => {
+    if (selected.actOpen.includes(aux)) {
+      setSelected({ ...selected, actOpen: selected.actOpen.filter(val => val !== aux) })
+    } else {
+      setSelected({ ...selected, actOpen: [...selected.actOpen, aux] })
+    }
+  }
+
+  const handleSelectSchOpen = (aux) => {
+    if (selected.schOpen.includes(aux)) {
+      setSelected({ ...selected, schOpen: selected.schOpen.filter(val => val !== aux) })
+    } else {
+      setSelected({ ...selected, schOpen: [...selected.schOpen, aux] })
+    }
   }
 
   return (
@@ -127,35 +156,53 @@ const Intraday = () => {
           </div>
 
           {chartData && <div className="mt-2">
+            {
+              loaded.intervals && <>
+
+
+                <h5>Select Scheduled Open</h5>
+                {intHeaders && intHeaders.map(header =>
+                  <button key={"select-sch-" + header} className={selected.schOpen.includes(header) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-primary m-1"} onClick={() => handleSelectSchOpen(header)}>{header}</button>
+                )}
+                <h5>Select Actual Open</h5>
+                {intHeaders && intHeaders.map(header =>
+                  <button key={"select-act-" + header} className={selected.actOpen.includes(header) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-primary m-1"} onClick={() => handleSelectActOpen(header)}>{header}</button>
+                )}
+                <h3 className="m-0">Scheduled Open vs Actual Open</h3>
+                <div className="container" style={{ marginTop: "-20px", height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
+                  <TotalPercentageChart data={chartData} percentages={["ACT_SL"]} totals={["SCH_OPEN", "ACT_OPEN"]} />
+                </div>
+                <h3 className="m-0">Actual Open vs Actual Requirements</h3>
+                <div className="container" style={{ marginTop: "-20px", height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
+                  <TotalPercentageChart data={chartData} percentages={["ACT_SL"]} totals={["ACT_OPEN", "ACT_REQ"]} />
+                </div>
+                <h3 className="m-0">Scheduled Open vs FC Requirements</h3>
+                <div className="container" style={{ marginTop: "-20px", height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
+                  <TotalPercentageChart data={chartData} percentages={[]} totals={["SCH_OPEN", "REQ"]} />
+                </div>
+              </>
+            }
 
             <h3 className="m-0">Requirements</h3>
             <div className="container" style={{ marginTop: "-20px", height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
               <TotalPercentageChart data={chartData} totals={["REQ", "ACT_REQ"]} />
             </div>
 
-            <h3 className="m-0">Volumes & SL</h3>
+            <h3 className="m-0">Volumes</h3>
             <div className="container" style={{ marginTop: "-20px", height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
-              <TotalPercentageChart data={chartData} percentages={["SL", "ACT_SL"]} totals={["VOLUMES", "ACT_VOLUMES"]} />
+              <TotalPercentageChart data={chartData} percentages={[]} totals={["VOLUMES", "ACT_VOLUMES"]} />
             </div>
 
-            <h3 className="m-0">AHT & SL</h3>
+            <h3 className="m-0">AHT</h3>
             <div className="container" style={{ marginTop: "-20px", height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
-              <TotalPercentageChart data={chartData} percentages={["SL", "ACT_SL"]} totals={["AHT", "ACT_AHT"]} />
+              <TotalPercentageChart data={chartData} percentages={[]} totals={["AHT", "ACT_AHT"]} />
             </div>
 
-            {
-              loaded.intervals && <>
-                <h3 className="m-0">Requirements, Scheduled Open & SL</h3>
-                <div className="container" style={{ marginTop: "-20px", height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
-                  <TotalPercentageChart data={chartData} percentages={["SL", "ACT_SL"]} totals={["ACT_REQ", "SCH_Open Time"]} />
-                </div>
-              </>
-            }
-
-
-
+            <h3 className="m-0">SL</h3>
+            <div className="container" style={{ marginTop: "-20px", height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
+              <TotalPercentageChart data={chartData} percentages={["SL", "ACT_SL"]} totals={[]} />
+            </div>
           </div>}
-
         </div>
       </main>
     </Fragment >

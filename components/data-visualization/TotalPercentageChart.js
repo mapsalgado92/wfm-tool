@@ -40,10 +40,10 @@ const TotalPercentageChart = ({ data, totals, percentages }) => {
           < Tooltip />
           <Legend verticalAlign="top" />
           {totals && totals.map((total, index) =>
-            <Area dataKey={total} style={{ opacity: "0.7" }} type="monotone" yAxisId="left" stroke={barColors[index]} fill={barColors[index]} />
+            <Area dataKey={total} style={{ opacity: "0.7" }} type="monotone" yAxisId="left" stroke={barColors[index + 1]} fill={barColors[index + 1]} />
           )}
           {percentages && percentages.map((percentage, index) =>
-            <Line dataKey={percentage} type="monotone" yAxisId="right" strokeWidth={2} fill={lineColors[index + 2]} stroke={lineColors[index + 3]} />
+            <Line dataKey={percentage} type="monotone" yAxisId="right" strokeWidth={1} fill={lineColors[index + 4]} stroke={lineColors[index + 4]} />
           )}
 
         </ComposedChart>
