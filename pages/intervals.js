@@ -18,7 +18,7 @@ const Intervals = () => {
   const [loaded, setLoaded] = useState({ intervals: false })
   const [generated, setGenerated] = useState({ intervals: false })
 
-  const [selected, setSelected] = useState({ date: null, agent: null, interval: 15, areas: [], bars: [] })
+  const [selected, setSelected] = useState({ date: null, agent: null, interval: 15, areas: [], bars: [], actOpen: [], schOpen: [] })
 
   const [exports, setExports] = useState(null)
   const [exportsCustomName, setExportsCustomName] = useState("")
@@ -173,9 +173,38 @@ const Intervals = () => {
         newChartItem[aux] = output.actual[aux][i]
       })
       totalsRow = totalsRow.map((val, index) => { if (val !== "Totals") { return val + newRow[index] } else { return val } })
+
       dataRows.push(newRow)
+
+
+      if (selected.actOpen) {
+        let newActOpen = 0
+        selected.actOpen.forEach(header => {
+          if (newChartItem[header]) {
+            newActOpen += parseInt(newChartItem[header])
+          }
+        })
+        newChartItem["ACT OPEN"] = newActOpen
+      } else {
+        newChartItem["ACT OPEN"] = 0
+      }
+
+      if (selected.schOpen) {
+        let newSchOpen = 0
+        selected.schOpen.forEach(header => {
+          if (newChartItem["SCH_" + header]) {
+            newSchOpen += parseInt(newChartItem["SCH_" + header])
+          }
+        })
+        newChartItem["SCH OPEN"] = newSchOpen
+      } else {
+        newChartItem["SCH OPEN"]
+
+      }
+
       newChartData.push(newChartItem)
     }
+
     dataRows.push(totalsRow)
 
     //Schedules and Actuals %
@@ -249,21 +278,26 @@ const Intervals = () => {
     }
   }
 
-  const exportChartData = () => {
+  const handleExportChartData = (headers) => {
+    let headerRow = headers
+    let data = chartData.map(chartItem => headerRow.map(aux => chartItem[aux]))
+    return [headerRow, ...data]
+  }
 
-    let headerRow = [...selected.areas, ...selected.bars]
-    let data = chartData.map(interval => [...selected.areas, ...selected.bars].map(aux => interval[aux]))
-    let totalsRow = [...selected.areas, ...selected.bars].map((aux) => {
-      let newTotal = 0
-      chartData.forEach(interval => {
-        newTotal += interval[aux]
-      })
-      return newTotal
-    })
+  const handleSelectActOpen = (aux) => {
+    if (selected.actOpen.includes(aux)) {
+      setSelected({ ...selected, actOpen: selected.actOpen.filter(val => val !== aux) })
+    } else {
+      setSelected({ ...selected, actOpen: [...selected.actOpen, aux] })
+    }
+  }
 
-
-
-    return [headerRow, ...data, totalsRow]
+  const handleSelectSchOpen = (aux) => {
+    if (selected.schOpen.includes(aux)) {
+      setSelected({ ...selected, schOpen: selected.schOpen.filter(val => val !== aux) })
+    } else {
+      setSelected({ ...selected, schOpen: [...selected.schOpen, aux] })
+    }
   }
 
   return (
@@ -352,8 +386,9 @@ const Intervals = () => {
               )}</div>
             <br />
 
+            <button className="btn btn-secondary btn-sm" onClick={() => setSelected({ ...selected, bars: [], areas: [] })}>Reset Chart</button>
             <CSVDownloader
-              data={exportChartData()}
+              data={handleExportChartData([...selected.areas, ...selected.bars])}
               filename={`intervals_${selected.date ? selected.date : entries.dates[0] + "_to_" + entries.dates[entries.dates.length - 1]}`}
               config={
                 { encoding: "ISO-8859-1" }
@@ -366,6 +401,38 @@ const Intervals = () => {
               <StackedComboChart data={chartData} areas={selected.areas} bars={selected.bars} />
             </div>
           </div>}
+
+          {generated.intervals && <div>
+            <h4>Select Scheduled Open</h4>
+            <div className="container mb-3">
+              {intervals.scheduledAuxs && intervals.scheduledAuxs.map(header =>
+                <button key={"select-sch-" + header} className={selected.schOpen.includes(header) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-primary m-1"} onClick={() => handleSelectSchOpen(header)}>{header}</button>
+              )}
+            </div>
+            <h4>Select Actual Open</h4>
+            <div className="container">
+              {intervals.actualAuxs && intervals.actualAuxs.map(header =>
+                <button key={"select-act-" + header} className={selected.actOpen.includes(header) ? "btn btn-sm btn-danger m-1" : "btn btn-sm btn-outline-primary m-1"} onClick={() => handleSelectActOpen(header)}>{header}</button>
+              )}
+            </div>
+            <br />
+            <button className="btn btn-dark btn-sm mx-2" onClick={handleGenerateIntervals}>Update Chart</button>
+            <button className="btn btn-secondary btn-sm" onClick={() => setSelected({ ...selected, actOpen: [], schOpen: [] })}>Reset Chart</button>
+            <CSVDownloader
+              data={handleExportChartData(["ACT OPEN", "SCH OPEN"])}
+              filename={`intervals_${selected.date ? selected.date : entries.dates[0] + "_to_" + entries.dates[entries.dates.length - 1]}`}
+              config={
+                { encoding: "ISO-8859-1" }
+              }
+            >
+              <button className="btn btn-success btn-sm mx-2">Download Chart Data</button>
+            </CSVDownloader>
+
+            <div className="container" style={{ height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
+              <StackedComboChart data={chartData} areas={["SCH OPEN"]} bars={["ACT OPEN"]} />
+            </div>
+          </div>}
+
           {generated.intervals && <div className="d-flex justify-content-center p-2 m-2">
             <SQLTable input={percentage.scheduled} title="Scheduled %" />
 

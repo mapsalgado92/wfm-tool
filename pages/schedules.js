@@ -135,6 +135,11 @@ const Schedules = () => {
       } else if (current[_START] === "Off") {
         agents[current[_IEXID]][current[_DATE]].output = "OFF"
       }
+      //TAG if Mappings has OPEN AUX
+      if (loaded.mappings && mappings[current[_ACTIVITY]] === "OPEN") {
+        agents[current[_IEXID]][current[_DATE]].hasOpen = true
+      }
+
     }
 
     Object.keys(agents).forEach((agent) => {

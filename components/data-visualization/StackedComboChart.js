@@ -20,7 +20,7 @@ const StackedComboChart = ({ data, areas, bars }) => {
         >
           <CartesianGrid strokeDasharray="1 1" />
           <XAxis dataKey="name"
-            allowDataOverflow={true}
+            allowDataOverflow={false}
             interval={1} // display all of values, instead of the default 5
             angle={-90} // force text to be 90, reading towards the graph
             dx={-6}
@@ -30,10 +30,10 @@ const StackedComboChart = ({ data, areas, bars }) => {
           <Tooltip />
           <Legend verticalAlign="top" />
           {areas && areas.map((area, index) =>
-            <Area dataKey={area} type="monotone" stackId="b" strokeWidth={4} stroke={areaColors[index]} fill={areaColors[index]} />
+            <Area dataKey={area} type="monotone" stackId="b" strokeWidth={1} stroke={areaColors[index]} fill={areaColors[index]} />
           )}
           {bars && bars.map((bar, index) =>
-            <Bar dataKey={bar} style={{ opacity: "0.7" }} stackId="a" stroke={"grey"} fill={barColors[index + 3]} />
+            <Bar dataKey={bar} style={{ opacity: "0.7" }} stackId="a" strokeWidth={1} stroke={"#222"} fill={barColors[index + 3]} />
           )}
         </ComposedChart>
 
