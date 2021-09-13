@@ -40,6 +40,11 @@ const IntradayConverter = ({ raw, exportConverted }) => {
         if (!dates.includes(current.date)) {
           dates.push(current.date)
         }
+      } else if (/Weekly /.test(aux) || /Monthly /.test(aux)) {
+        current.date = aux
+        if (!dates.includes(current.date)) {
+          dates.push(current.date)
+        }
       } else if (/[0-9]+:[0-9]+/.test(aux)) {
         let time = convertColonTime(aux)
         let newEntry = [current.date, time, dataRows[i][_CONTACTS], dataRows[i][_ACT_CONTACTS], dataRows[i][_AHT], dataRows[i][_ACT_AHT], dataRows[i][_SL], dataRows[i][_ACT_SL], dataRows[i][_REQUIRED], dataRows[i][_ACT_REQUIRED]]
