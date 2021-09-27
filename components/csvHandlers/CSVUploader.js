@@ -28,7 +28,7 @@ const CSVUploader = ({ loadedHandler, removeHandler, header, label }) => {
           { encoding: "ISO-8859-1" }
         }
         ref={buttonRef}
-        onFileLoad={(csv) => loadedHandler(csv.map(entry => entry.data))}
+        onFileLoad={(csv) => { console.log(csv); loadedHandler(csv.map(entry => entry.data)) }}
         onError={(error) => console.log(error)}
         onRemoveFile={() => removeHandler()}
         noProgressBar

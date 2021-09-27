@@ -18,9 +18,9 @@ const ScheduleConverter = ({ raw, exportConverted }) => {
     const _DATE = 2
     const _START = 3
     const _END = 4
-    const _ACTIVITY = 7
-    const _ACT_START = 8
-    const _ACT_END = 11
+    const _ACTIVITY = 6
+    const _ACT_START = 7
+    const _ACT_END = 10
 
     let current = {
       agent: "",

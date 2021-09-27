@@ -23,6 +23,7 @@ export const EntriesConverter = () => {
   const [customName, setCustomName] = useState("")
 
   const handleLoaded = (loadedFile) => {
+
     setRaw(loadedFile)
     setConverted({ isConverted: false })
   }

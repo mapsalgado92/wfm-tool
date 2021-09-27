@@ -23,24 +23,24 @@ const IntervalsConverter = ({ raw, exportConverted }) => {
       date: ""
     }
 
-    const _AGENT = 1
-    const _MU = 2
-    const _TOTALS = 2
-    const _DATE = 2
-    const _SCH_FROM = 2
+    const _AGENT = 0
+    const _MU = 0
+    const _TOTALS = 0
+    const _DATE = 0
+    const _SCH_FROM = 0
     const _SCH_TO = 4
-    const _SCH_DURATION = 6
-    const _ACT_FROM = 7
-    const _ACT_TO = 8
-    const _ACT_DURATION = 10
-    const _SCH_ACTIVITY = 12
-    const _ACT_ACTIVITY = 15
-    const _DESCRIPTION = 20
-    const _T_SCH_TIME = 5
-    const _T_ACT_TIME = 7
-    const _T_MIN_IN = 9
-    const _T_MIN_OUT = 11
-    const _T_PERCENT = 13
+    const _SCH_DURATION = 8
+    const _ACT_FROM = 11
+    const _ACT_TO = 13
+    const _ACT_DURATION = 17
+    const _SCH_ACTIVITY = 21
+    const _ACT_ACTIVITY = 29
+    const _DESCRIPTION = 37
+    const _T_SCH_TIME = 6
+    const _T_ACT_TIME = 10
+    const _T_MIN_IN = 15
+    const _T_MIN_OUT = 19
+    const _T_PERCENT = 24
 
     let header = ["ENTRY-TYPE", "AGENT", "DATE", "FROM", "TO", "DURATION", "ACTIVITY", "DESCRIPTION"]
     let totalsEntries = [["AGENT", "DATE", "ACTIVITY", "SCH TIME", "ACT TIME", "MIN IN", "MIN OUT", "ADH PERCENT"]]
@@ -51,8 +51,8 @@ const IntervalsConverter = ({ raw, exportConverted }) => {
     let agents = []
 
 
-    for (let i = 9; i < dataRows.length - 15; i++) {
-      if (/Agent:/.test(dataRows[i][_AGENT])) {
+    for (let i = 4; i < dataRows.length - 15; i++) {
+      if (/Agent :/.test(dataRows[i][_AGENT])) {
         current.agent = dataRows[i][_AGENT].split(": ")[1]
         current.totals = false
         if (!agents.includes(current.agent)) {
@@ -60,11 +60,11 @@ const IntervalsConverter = ({ raw, exportConverted }) => {
         }
       }
 
-      if (/MU:/.test(dataRows[i][_MU])) {
+      if (/MU :/.test(dataRows[i][_MU])) {
         break
       }
 
-      if (/Date:/.test(dataRows[i][_DATE])) {
+      if (/Date :/.test(dataRows[i][_DATE])) {
         current.date = dateToString(stringToDate(dataRows[i][_DATE].split(":")[1]))
         if (!dates.includes(current.date)) {
           dates.push(current.date)

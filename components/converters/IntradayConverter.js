@@ -15,15 +15,18 @@ const IntradayConverter = ({ raw, exportConverted }) => {
 
     let dataRows = raw
 
-    let _DATE_TIME = 1;
-    let _CONTACTS = 2;
-    let _AHT = 8;
-    let _SL = 10;
-    let _REQUIRED = 20;
-    let _ACT_CONTACTS = 3
-    let _ACT_AHT = 9
-    let _ACT_SL = 12
-    let _ACT_REQUIRED = 22
+    console.log("THIS IS RAW", raw)
+    console.log("THIS IS DATA ROWS", dataRows)
+
+    let _DATE_TIME = 2;
+    let _CONTACTS = 3;
+    let _AHT = 9;
+    let _SL = 11;
+    let _REQUIRED = 17;
+    let _ACT_CONTACTS = 4;
+    let _ACT_AHT = 10;
+    let _ACT_SL = 12;
+    let _ACT_REQUIRED = 18;
 
     let header = ["DATE", "TIME", "VOLUMES", "ACT_VOLUMES", "AHT", "ACT_AHT", "SL", "ACT_SL", "REQ", "ACT_REQ"]
     let entries = []
@@ -33,7 +36,7 @@ const IntradayConverter = ({ raw, exportConverted }) => {
       date: null,
     }
 
-    for (let i = 9; i < dataRows.length - 15; i++) {
+    for (let i = 4; i < dataRows.length - 15; i++) {
       let aux = dataRows[i][_DATE_TIME]
       if (/Date: /.test(aux)) {
         current.date = dateToString(stringToDate(aux.split(":")[1]))
@@ -48,12 +51,19 @@ const IntradayConverter = ({ raw, exportConverted }) => {
       } else if (/[0-9]+:[0-9]+/.test(aux)) {
         let time = convertColonTime(aux)
         let newEntry = [current.date, time, dataRows[i][_CONTACTS], dataRows[i][_ACT_CONTACTS], dataRows[i][_AHT], dataRows[i][_ACT_AHT], dataRows[i][_SL], dataRows[i][_ACT_SL], dataRows[i][_REQUIRED], dataRows[i][_ACT_REQUIRED]]
-        entries.push(newEntry)
+        if (i === 138) {
+          console.log("THIS IS IT", newEntry)
+        }
 
+        entries.push(newEntry)
       } else if (/Total/.test(aux) || /Average/.test(aux)) {
         let newEntry = [current.date, aux, dataRows[i][_CONTACTS], dataRows[i][_ACT_CONTACTS], dataRows[i][_AHT], dataRows[i][_ACT_AHT], dataRows[i][_SL], dataRows[i][_ACT_SL], dataRows[i][_REQUIRED], dataRows[i][_ACT_REQUIRED]]
         entries.push(newEntry)
       }
+
+
+
+
     }
 
     let interval = 60
