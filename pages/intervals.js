@@ -395,6 +395,7 @@ const Intervals = () => {
               }
             >
               <button className="btn btn-success btn-sm mx-2">Download Chart Data</button>
+
             </CSVDownloader>
 
             <div className="container" style={{ height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
@@ -426,7 +427,11 @@ const Intervals = () => {
               }
             >
               <button className="btn btn-success btn-sm mx-2">Download Chart Data</button>
+
             </CSVDownloader>
+
+            <button className="btn btn-primary btn-sm me-2" onClick={() => { navigator.clipboard.writeText(`${chartData.map(row => row["SCH OPEN"]).join("\n")}`) }}>Copy SCH</button>
+            <button className="btn btn-primary btn-sm" onClick={() => { navigator.clipboard.writeText(`${chartData.map(row => row["ACT OPEN"]).join("\n")}`) }}>Copy ACT</button>
 
             <div className="container" style={{ height: "70vh", maxHeight: "600px", width: "95vw", maxWidth: "1500px" }} >
               <StackedComboChart data={chartData} areas={["SCH OPEN"]} bars={["ACT OPEN"]} />
