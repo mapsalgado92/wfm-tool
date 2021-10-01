@@ -5,6 +5,7 @@
 //// entries: 2D matrix with the entries matching the header fields.
 import { useContext } from 'react'
 import { DataContext } from '../../contexts/DataContextProvider';
+import { dateToString, incrementDate, stringToDate } from '../../snippets/date-handling';
 
 const ScheduleConverter = ({ raw, exportConverted }) => {
 
@@ -47,6 +48,12 @@ const ScheduleConverter = ({ raw, exportConverted }) => {
       }
       if (data[i][_ACTIVITY]) {
         entries.push([current.agentId, current.agentName, current.date, data[i][_ACTIVITY], data[i][_ACT_START], data[i][_ACT_END] ? data[i][_ACT_END] : "-"])
+
+        console.log("WHAT?", data[i][_ACT_START].split(" ")[1], data[i][_ACT_END].split(" ")[1])
+        if (data[i][_ACT_START].split(" ")[1] === "PM" && data[i][_ACT_END].split(" ")[1] === "AM") {
+          console.log("WHATUP")
+          current.date = incrementDate(current.date)
+        }
       }
     }
 
