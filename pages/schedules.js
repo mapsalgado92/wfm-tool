@@ -61,9 +61,9 @@ const Schedules = () => {
     const _IEXID = 0
     const _AGENT = 1
     const _DATE = 2
-    const _ACTIVITY = 3
-    const _START = 4
-    const _END = 5
+    const _ACTIVITY = 4
+    const _START = 5
+    const _END = 6
 
     //Input Validation
     if (data[0]) {

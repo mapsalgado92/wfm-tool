@@ -27,10 +27,11 @@ const ScheduleConverter = ({ raw, exportConverted }) => {
       agent: "",
       agentId: "",
       agentName: "",
-      date: ""
+      date: "",
+      actualDate: ""
     }
 
-    let header = ["IEXID", "AGENT", "DATE", "ACTIVITY", "START", "END"]
+    let header = ["IEXID", "AGENT", "DATE", "ACTUAL DATE", "ACTIVITY", "START", "END"]
     let entries = []
 
     for (let i = 5; i <= data.length - 13; i++) {
@@ -44,16 +45,23 @@ const ScheduleConverter = ({ raw, exportConverted }) => {
       }
       if (/[0-9]+\/[0-9]+/.test(data[i][_DATE])) {
         current.date = data[i][_DATE]
-        entries.push([current.agentId, current.agentName, current.date, "Shift", data[i][_START], data[i][_END] ? data[i][_END] : "-"])
+        current.actualDate = data[i][_DATE]
+        entries.push([current.agentId, current.agentName, current.date, current.actualDate, "Shift", data[i][_START], data[i][_END] ? data[i][_END] : "-"])
       }
       if (data[i][_ACTIVITY]) {
-        entries.push([current.agentId, current.agentName, current.date, data[i][_ACTIVITY], data[i][_ACT_START], data[i][_ACT_END] ? data[i][_ACT_END] : "-"])
-
-        console.log("WHAT?", data[i][_ACT_START].split(" ")[1], data[i][_ACT_END].split(" ")[1])
         if (data[i][_ACT_START].split(" ")[1] === "PM" && data[i][_ACT_END].split(" ")[1] === "AM") {
-          console.log("WHATUP")
-          current.date = incrementDate(current.date)
+          console.log("BEFORE", current.actualDate)
+          current.actualDate = incrementDate(current.date).split("/").map(number => {
+
+            if (number.length === 4) {
+              return number[2] + number[3]
+            } else if (number[0] === "0") {
+              return number[1]
+            } else { return number }
+          }).join("/")
+          console.log("AFTER", current.actualDate)
         }
+        entries.push([current.agentId, current.agentName, current.date, current.actualDate, data[i][_ACTIVITY], data[i][_ACT_START], data[i][_ACT_END] ? data[i][_ACT_END] : "-"])
       }
     }
 
