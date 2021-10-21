@@ -17,13 +17,13 @@ const AuditTrailConverter = ({ raw, exportConverted }) => {
       return -1
     }
 
-    const _AGENT = 1
-    const _DATE = 2
-    const _USER = 4
-    const _MODIFIED = 3
-    const _PROCESS = 6
-    const _START = 7
-    const _STOP = 9
+    const _AGENT = 2
+    const _DATE = 4
+    const _USER = 8
+    const _MODIFIED = 6
+    const _PROCESS = 10
+    const _START = 11
+    const _STOP = 12
 
 
     let current = {
