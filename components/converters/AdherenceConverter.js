@@ -23,40 +23,42 @@ const AdherenceConverter = ({ raw, exportConverted }) => {
       date: ""
     }
 
-    let _AGENT = 1
-    let _MU = 2
-    let _TOTALS = 2
-    let _DATE = 2
-    let _ACTIVITY = 2
-    let _SCH_TIME = 5
-    let _ACT_TIME = 7
-    let _MIN_IN = 9
+    let _AGENT = 0
+    let _MU = 0
+    let _TOTALS = 0
+    let _DATE = 0
+    let _ACTIVITY = 0
+    let _SCH_TIME = 4
+    let _ACT_TIME = 6
+    let _MIN_IN = 8
     let _MIN_OUT = 11
-    let _ADH_PERCENT = 13
-    let _CONF_MIN_DIF = 14
-    let _CONF_PERCENT = 17
+    let _ADH_PERCENT = 14
+    let _CONF_MIN_DIF = 16
+    let _CONF_PERCENT = 19
 
     let header = ["IEXID", "AGENT", "DATE", "ACTIVITY", "SCH TIME", "ACT TIME", "MIN IN ADH", "MIN OUT ADH", "ADH PERCENT", "CONF MIN DIF", "CONF PERCENT"]
     let entries = []
 
 
-    for (let i = 9; i < data.length - 15; i++) {
-      if (/Agent:/.test(data[i][_AGENT])) {
+    for (let i = 4; i < data.length - 8; i++) {
+      if (/Agent : /.test(data[i][_AGENT])) {
         let split = data[i][_AGENT].split(" ")
+        split.shift()
+        split.shift()
         split.shift()
         current.agentId = split.shift()
         current.agentName = split.join(" ")
       }
 
-      if (/MU:/.test(data[i][_MU]) || /MU Set:/.test(data[i][_MU])) {
+      if (/MU :/.test(data[i][_MU]) || /MU Set :/.test(data[i][_MU])) {
         current.agentName = data[i][_MU]
         current.agentId = "MU Total"
 
 
       }
 
-      if (/Date:/.test(data[i][_DATE])) {
-        current.date = data[i][_DATE].split(":")[1]
+      if (/Date :/.test(data[i][_DATE])) {
+        current.date = data[i][_DATE].split(" : ")[1]
       }
 
       if (/Total for/.test(data[i][_TOTALS])) {

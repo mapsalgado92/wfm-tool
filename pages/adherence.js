@@ -35,12 +35,24 @@ const Adherence = () => {
 
     const data = entries.data
 
+    console.log("DATA", data)
+
+    let fields = data[0].slice(4)
+
+    console.log("DATA FIELDS", data[0].slice(4))
+
+    console.log("FIELDS", fields)
+
     const [_IEXID, _AGENT, _DATE, _ACTIVITY, _SCH_TIME, _ACT_TIME, _MIN_IN_ADH, _MIN_OUT_ADH, _ADH_PERCENT, _CONF_MIN_DIF, _CONF_PERCENT] =
       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
     let newAdherence = {
-      fields: data[0].slice(4)
+      fields
     }
+
+    console.log("NEW ADHERENCE FIELDS", newAdherence.fields)
+
+    console.log("BEFORE - newAdherence", newAdherence)
 
     let newIds = []
     let newDates = []
@@ -84,14 +96,16 @@ const Adherence = () => {
     newAdherence.iexIds = newIds
     newAdherence.activities = newActivities.sort()
 
+    console.log("AFTER - newAdherence", newAdherence)
 
+    /*
     let newChartData = newAdherence.dates.map(date => {
       let newItem = { name: date }
       newAdherence.fields.forEach(field => {
         newItem[field] = parseInt(newAdherence[newIds[newIds.length - 1]][date]["Total"][field].split("%")[0])
       })
       return newItem
-    })
+    })*/
 
 
 
@@ -108,7 +122,7 @@ const Adherence = () => {
 
     setAdherence(newAdherence)
     setExports(newExports)
-    setChartData(newChartData)
+    //setChartData(newChartData)
     setGenerated({ adherence: true })
 
   }
