@@ -28,7 +28,7 @@ const IntradayConverter = ({ raw, exportConverted }) => {
     let _ACT_SL = 12;
     let _ACT_REQUIRED = 18;
 
-    let header = ["DATE", "TIME", "VOLUMES", "ACT_VOLUMES", "AHT", "ACT_AHT", "SL", "ACT_SL", "REQ", "ACT_REQ"]
+    let header = ["DATE", "TIME", "VOLUMES", "ACT_VOLUMES", "AHT", "ACT_AHT", "SL", "ACT_SL", "REQ", "ACT_REQ", "REQ_MIN", "ACT_REQ_MIN"]
     let entries = []
     let dates = []
 
@@ -50,19 +50,16 @@ const IntradayConverter = ({ raw, exportConverted }) => {
         }
       } else if (/[0-9]+:[0-9]+/.test(aux)) {
         let time = convertColonTime(aux)
-        let newEntry = [current.date, time, dataRows[i][_CONTACTS], dataRows[i][_ACT_CONTACTS], dataRows[i][_AHT], dataRows[i][_ACT_AHT], dataRows[i][_SL], dataRows[i][_ACT_SL], dataRows[i][_REQUIRED], dataRows[i][_ACT_REQUIRED]]
+        let newEntry = [current.date, time, dataRows[i][_CONTACTS], dataRows[i][_ACT_CONTACTS], dataRows[i][_AHT], dataRows[i][_ACT_AHT], dataRows[i][_SL], dataRows[i][_ACT_SL], dataRows[i][_REQUIRED], dataRows[i][_ACT_REQUIRED], dataRows[i][_REQUIRED], dataRows[i][_ACT_REQUIRED]]
         if (i === 138) {
           console.log("THIS IS IT", newEntry)
         }
 
         entries.push(newEntry)
       } else if (/Total/.test(aux) || /Average/.test(aux)) {
-        let newEntry = [current.date, aux, dataRows[i][_CONTACTS], dataRows[i][_ACT_CONTACTS], dataRows[i][_AHT], dataRows[i][_ACT_AHT], dataRows[i][_SL], dataRows[i][_ACT_SL], dataRows[i][_REQUIRED], dataRows[i][_ACT_REQUIRED]]
+        let newEntry = [current.date, aux, dataRows[i][_CONTACTS], dataRows[i][_ACT_CONTACTS], dataRows[i][_AHT], dataRows[i][_ACT_AHT], dataRows[i][_SL], dataRows[i][_ACT_SL], dataRows[i][_REQUIRED], dataRows[i][_ACT_REQUIRED], dataRows[i][_REQUIRED], dataRows[i][_ACT_REQUIRED]]
         entries.push(newEntry)
       }
-
-
-
 
     }
 
@@ -75,8 +72,8 @@ const IntradayConverter = ({ raw, exportConverted }) => {
     }
 
     entries = entries.map(entry => entry.map((val, index) => {
-      if (index === 9 || index === 8) {
-        return val * interval
+      if (index === 10 || index === 11) {
+        return parseInt(val) * interval
       } else {
         return val
       }
