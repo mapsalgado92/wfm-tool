@@ -179,7 +179,7 @@ const Schedules = () => {
 
     newActivityList = [...shiftList, ...auxList]
 
-    let newExports = [["BOOSTID", "IEXID", "AGENT"].concat(newDatesList)].concat(newIdList.map((id) =>
+    let newExports = [["BOOSTID", "IEXID", "AGENT"].concat(newDatesList.sort())].concat(newIdList.map((id) =>
       [agents[id].boost, id, agents[id].name].concat(newDatesList.map((date) => {
         if (hasLunch && agents[id][date].lunch) {
           return `${agents[id][date].output} (${agents[id][date].lunch})`
