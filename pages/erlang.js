@@ -3,8 +3,7 @@ import { Fragment, useState } from "react"
 import CSVUploader from "../components/csvHandlers/CSVUploader"
 import { Col, Form, Row, Button } from "react-bootstrap"
 
-import { getNumberOfAgents } from 'erlang-c-js';
-
+import useErlang from "../components/hooks/useErlang"
 
 
 const Erlang = () => {
@@ -26,6 +25,8 @@ const Erlang = () => {
 
   const [chartData, setChartData] = useState(null)
 
+  const erlang = useErlang()
+
   const handleUploadVolumes = (csv) => {
 
     setLoaded({ ...loaded, volumes: false })
@@ -42,10 +43,10 @@ const Erlang = () => {
 
     console.log(totalVolumes)
 
-    let requirements = totalVolumes.map((row, index) => index >> 0 ? row.map((val, index) => index >> 0 ? val ? getNumberOfAgents(val, formInfo.interval, formInfo.tgAHT, formInfo.tgSL, formInfo.tgTime, formInfo.maxOccupancy, formInfo.shrinkage) : null : val) : row)
+    //let requirements = totalVolumes.map((row, index) => index >> 0 ? row.map((val, index) => index >> 0 ? val ? getNumberOfAgents(val, formInfo.interval, formInfo.tgAHT, formInfo.tgSL, formInfo.tgTime, formInfo.maxOccupancy, formInfo.shrinkage) : null : val) : row)
 
-    setRequirements(requirements)
-    console.log(requirements)
+    //setRequirements(requirements)
+    //console.log(requirements)
 
 
     let newChartData = []
