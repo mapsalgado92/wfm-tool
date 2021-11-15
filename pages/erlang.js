@@ -10,8 +10,9 @@ const Erlang = () => {
 
   const [loaded, setLoaded] = useState({ volumes: false })
 
-  const [volumes, setVolumes] = useState(null)
-  const [requirements, setRequirements] = useState(null)
+  const [input, setInput] = useState(null)
+
+  const [output, setOutput] = useState(null)
 
   const [formInfo, setFormInfo] = useState({
     totalVolumes: 50,
@@ -19,19 +20,95 @@ const Erlang = () => {
     interval: 900,
     tgSL: 0.8,
     tgTime: 20,
-    maxOccupancy: 0.8,
-    shrinkage: 0.2
+    maxOccupancy: 0.8
   })
 
-  const [chartData, setChartData] = useState(null)
+  //const [chartData, setChartData] = useState(null)
 
   const erlang = useErlang()
 
   const handleUploadVolumes = (csv) => {
 
-    setLoaded({ ...loaded, volumes: false })
-    setVolumes(csv)
-    setLoaded({ ...loaded, volumes: true })
+    if (!loaded.volumes || !input) {
+      setLoaded({ ...loaded, volumes: false })
+
+      let headers = csv.shift()
+      headers.shift()
+
+      let input = csv.map(row => {
+        let interval = row[0]
+        return headers.map((weekday, index) => {
+          return {
+            interval,
+            weekday,
+            vDist: parseFloat(row[index + 1])
+          }
+        })
+      }).flat()
+
+      setInput(input)
+
+      console.log(input)
+
+      setLoaded({ ...loaded, volumes: true })
+    } else {
+      let data = csv
+      data.shift()
+      data = data.map(row => row.slice(1)).flat()
+      if (data.length === input.length) {
+        let newInput = input.map((entry, index) => {
+          return { ...entry, vDist: parseFloat(data[index]) }
+        })
+        setInput(newInput)
+        console.log("NEW INPUT", newInput)
+        setLoaded({ ...loaded, volumes: true })
+      } else {
+        console.log("New Data does not match Input")
+        setLoaded({ ...loaded, volumes: false })
+      }
+    }
+  }
+
+  const handleUploadStaffing = (csv) => {
+
+    if (!loaded.staff || !input) {
+      setLoaded({ ...loaded, staff: false })
+
+      let headers = csv.shift()
+      headers.shift()
+
+      let input = csv.map(row => {
+        let interval = row[0]
+        return headers.map((weekday, index) => {
+          return {
+            interval,
+            weekday,
+            staff: Math.round(parseFloat(row[index + 1]))
+          }
+        })
+      }).flat()
+
+      setInput(input)
+
+      console.log(input)
+
+      setLoaded({ ...loaded, staff: true })
+    } else {
+      let data = csv
+      data.shift()
+      data = data.map(row => row.slice(1)).flat()
+      if (data.length === input.length) {
+        let newInput = input.map((entry, index) => {
+          return { ...entry, staff: Math.round(parseFloat(data[index])) }
+        })
+        console.log("NEW INPUT", newInput)
+        setInput(newInput)
+        setLoaded({ ...loaded, staff: true })
+      } else {
+        console.log("New Data does not match Input")
+        setLoaded({ ...loaded, staff: false })
+      }
+    }
 
   }
 
@@ -39,26 +116,70 @@ const Erlang = () => {
 
     e.preventDefault()
 
-    let totalVolumes = volumes.map((row, index) => index >> 0 ? row.map((val, index) => index >> 0 ? val ? Math.round(val * formInfo.totalVolumes * 1000) / 1000 : null : val) : row)
+    erlang.updateTargets({
+      sl: formInfo.tgSL,
+      tt: formInfo.tgTime,
+      occ: formInfo.maxOccupancy
+    })
 
-    console.log(totalVolumes)
+    erlang.updateInterval(formInfo.interval)
 
-    //let requirements = totalVolumes.map((row, index) => index >> 0 ? row.map((val, index) => index >> 0 ? val ? getNumberOfAgents(val, formInfo.interval, formInfo.tgAHT, formInfo.tgSL, formInfo.tgTime, formInfo.maxOccupancy, formInfo.shrinkage) : null : val) : row)
+    let newOutput = input.map(entry => {
+      return {
+        ...entry,
+        erlang: erlang.getRequiredAgents(entry.vDist * formInfo.totalVolumes, entry.aht ? entry.aht : formInfo.tgAHT)
+      }
+    })
 
-    //setRequirements(requirements)
-    //console.log(requirements)
+    console.log("OUTPUT", newOutput)
 
-
-    let newChartData = []
-
-
-    console.log("HANDLING GENERATE REQUIREMENTS")
-
-
+    setOutput(newOutput)
 
   }
 
+  const handleCalculateErlang = (e) => {
 
+    e.preventDefault()
+
+    erlang.updateInterval(formInfo.interval)
+
+    let newOutput = input.map(entry => {
+      return {
+        ...entry,
+        erlang: erlang.calculateErlang(entry.vDist * formInfo.totalVolumes, entry.staff, entry.aht ? entry.aht : formInfo.tgAHT)
+      }
+    })
+
+    console.log("OUTPUT", newOutput)
+
+    setOutput(newOutput)
+
+  }
+
+  const getTable = (field) => {
+    if (!output) {
+      console.log("NO OUTPUT!")
+      return -1
+    }
+
+    let headers = ["Interval", ...output.slice(0, 7).map(entry => entry.weekday)]
+
+    let table = [headers]
+
+    for (let i = 0; i < output.length / 7; i++) {
+
+      table.push([
+        output[i * 7].interval,
+        ...output.slice(i * 7, i * 7 + 7).map(entry => entry.erlang ? entry.erlang[field] : null)
+      ]
+
+      )
+    }
+
+    console.log(table)
+
+    return table
+  }
 
   return (
     <Fragment>
@@ -74,6 +195,7 @@ const Erlang = () => {
           <h3>UPLOADS</h3>
           <div className="d-flex">
             <CSVUploader loadedHandler={handleUploadVolumes} removeHandler={() => setLoaded({ ...loaded, volumes: false })} header="Volumes Dist CSV" label="Insert Volumes CSV" />
+            <CSVUploader loadedHandler={handleUploadStaffing} removeHandler={() => setLoaded({ ...loaded, staff: false })} header="Staffing Heatmap CSV" label="Insert Staffing CSV" />
           </div>
         </div>
 
@@ -133,9 +255,17 @@ const Erlang = () => {
 
           <br />
 
-          <Button type="submit" onClick={handleGenerateRequirements}>GENERATE</Button>
+          <Button type="submit" className="me-2" disabled={!loaded.volumes || loaded.staff} onClick={handleGenerateRequirements}>Generate Requirements</Button>
+          <Button type="submit" className="me-2" disabled={!loaded.volumes || !loaded.staff} onClick={handleCalculateErlang}>Calculate Erlang</Button>
+          <br />
+          <br />
 
-          <button className="btn btn-primary btn-sm ms-2" onClick={() => { navigator.clipboard.writeText(`${requirements.map(row => row.join("\t")).join("\n")}`) }}>Copy to Clipboard</button>
+          <Button className="me-2" variant="dark" onClick={() => { navigator.clipboard.writeText(`${getTable("agents").map(row => row.join("\t")).join("\n")}`) }}>Copy Requirements</Button>
+          <Button className="me-2" variant="dark" onClick={() => { navigator.clipboard.writeText(`${getTable("sl").map(row => row.join("\t")).join("\n")}`) }}>Copy Service Level</Button>
+          <Button className="me-2" variant="dark" onClick={() => { navigator.clipboard.writeText(`${getTable("occupancy").map(row => row.join("\t")).join("\n")}`) }}>Copy Occupancy</Button>
+          <Button className="me-2" variant="dark" onClick={() => { navigator.clipboard.writeText(`${getTable("asa").map(row => row.join("\t")).join("\n")}`) }}>Copy ASA</Button>
+          <Button className="me-2" variant="dark" onClick={() => { navigator.clipboard.writeText(`${getTable("volumes").map(row => row.join("\t")).join("\n")}`) }}>Copy Volumes</Button>
+          <br />
 
         </Form>
 
