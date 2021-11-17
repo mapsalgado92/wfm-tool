@@ -32,7 +32,7 @@ const Header = () => {
             <Link href="/intraday" ><a className="nav-link mx-3 border-bottom" >Intraday {(entries.type === "intraday") && <span className="badge bg-danger">E</span>}</a></Link>
           </li>
           <li className="nav-item">
-            <Link href="/erlang" ><a className="nav-link mx-3 border-bottom" >Erlang {(entries.type === "intraday") && <span className="badge bg-danger">E</span>}</a></Link>
+            <Link href="/erlang" ><a className="nav-link mx-3 border-bottom" >Erlang</a></Link>
           </li>
         </ul>
       </div>
