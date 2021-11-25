@@ -34,7 +34,7 @@ const ScheduleConverter = ({ raw, exportConverted }) => {
     let header = ["IEXID", "AGENT", "DATE", "ACTUAL DATE", "ACTIVITY", "START", "END"]
     let entries = []
 
-    for (let i = 5; i <= data.length - 13; i++) {
+    for (let i = 5; i <= data.length - 8; i++) {
 
       if (/Agent:/.test(data[i][_AGENT])) {
         current.agent = data[i][_AGENT]

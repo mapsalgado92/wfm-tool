@@ -51,7 +51,7 @@ const IntervalsConverter = ({ raw, exportConverted }) => {
     let agents = []
 
 
-    for (let i = 4; i < dataRows.length - 15; i++) {
+    for (let i = 4; i < dataRows.length - 8; i++) {
       if (/Agent :/.test(dataRows[i][_AGENT])) {
         current.agent = dataRows[i][_AGENT].split(": ")[1]
         current.totals = false
