@@ -76,9 +76,9 @@ const AdherenceConverter = ({ raw, exportConverted }) => {
             data[i][_ACT_TIME],
             data[i][_MIN_IN],
             data[i][_MIN_OUT],
-            data[i][_ADH_PERCENT],
-            data[i][_CONF_MIN_DIF],
-            data[i][_CONF_PERCENT]
+            data[i][current.agentId ? _ADH_PERCENT : _ADH_PERCENT-1],
+            data[i][current.agentId ? _CONF_MIN_DIF : _CONF_MIN_DIF-1],
+            data[i][current.agentId ? _CONF_PERCENT : _CONF_PERCENT-1]
           ]
         )
       }
