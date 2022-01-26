@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { DataContext } from '../../contexts/DataContextProvider';
+import { getMinutes } from '../../snippets/date-handling';
 
 
 const AdherenceConverter = ({ raw, exportConverted }) => {
@@ -53,8 +54,6 @@ const AdherenceConverter = ({ raw, exportConverted }) => {
       if (/MU :/.test(data[i][_MU]) || /MU Set :/.test(data[i][_MU])) {
         current.agentName = data[i][_MU]
         current.agentId = "MU Total"
-
-
       }
 
       if (/Date :/.test(data[i][_DATE])) {
@@ -72,8 +71,8 @@ const AdherenceConverter = ({ raw, exportConverted }) => {
             current.agentName,
             current.date,
             data[i][_ACTIVITY],
-            data[i][_SCH_TIME],
-            data[i][_ACT_TIME],
+            getMinutes(data[i][_SCH_TIME]),
+            getMinutes(data[i][_ACT_TIME]),
             data[i][_MIN_IN],
             data[i][_MIN_OUT],
             data[i][current.agentId ? _ADH_PERCENT : _ADH_PERCENT-1],
